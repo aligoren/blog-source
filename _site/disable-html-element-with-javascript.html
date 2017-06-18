@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Disable or Enable HTML Element with JavaScript &middot; Ali GÖREN
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/lanyon.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+
+  <body>
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-item">
+    <p></p>
+    <img src="/images/ali.jpg" alt="my-photo">
+  </div>
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="/">Anasayfa</a>
+
+    
+
+    
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/about">About Me</a>
+        
+      
+    
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+  </nav>
+
+  <div class="sidebar-item">
+    <p>
+      &copy; 2017. Made with <span class="hearts">&hearts;</span> Jekyll
+    </p>
+  </div>
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Anasayfa">Ali GÖREN</a>
+            <small>Açık Kaynak, JavaScript, Python, .NET</small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post post-detail">
+  <h1 class="post-title">Disable or Enable HTML Element with JavaScript</h1>
+  <span class="post-date">07 Jan 2017</span>
+  
+    <div class="tag-container">
+        Etiketler:
+        
+          <span class="tags" alt="JavaScript etiketine sahip yazılar" title="JavaScript etiketine sahip yazılar">JavaScript</span>
+        
+          <span class="tags" alt="Vanilla JS etiketine sahip yazılar" title="Vanilla JS etiketine sahip yazılar">Vanilla JS</span>
+        
+          <span class="tags" alt="jQuery etiketine sahip yazılar" title="jQuery etiketine sahip yazılar">jQuery</span>
+        
+          <span class="tags" alt="Programming etiketine sahip yazılar" title="Programming etiketine sahip yazılar">Programming</span>
+        
+    </div>
+  
+  <p>Hi. I needed to make the HTML elements enabled or disable.</p>
+
+<p>When I try with VanillaJS I wrote this code:
+<!--more--></p>
+
+<h2 id="vanillajs-way">VanillaJS Way</h2>
+
+<p><strong>JS Code</strong></p>
+
+<div class="language-javascript highlighter-rouge"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">disableOrEnableBtn</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">isDisabled</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">"myBtn"</span><span class="p">).</span><span class="nx">disabled</span><span class="p">;</span>
+    <span class="k">if</span><span class="p">(</span><span class="nx">isDisabled</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">"myBtn"</span><span class="p">).</span><span class="nx">disabled</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">"myBtn"</span><span class="p">).</span><span class="nx">disabled</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<p><strong>HTML Code</strong></p>
+
+<div class="language-html highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;button</span> <span class="na">id=</span><span class="s">"myBtn"</span><span class="nt">&gt;</span>Button<span class="nt">&lt;/button&gt;</span>
+
+<span class="nt">&lt;button</span> <span class="na">onclick=</span><span class="s">"disableBtn();"</span><span class="nt">&gt;</span>Change Button Status<span class="nt">&lt;/button&gt;</span>
+</code></pre>
+</div>
+
+<p>See VanillaJS Example <a href="https://jsfiddle.net/aligoren/pqa6xw51/">https://jsfiddle.net/aligoren/pqa6xw51/</a></p>
+
+<h2 id="jquery-way">jQuery Way</h2>
+
+<p>You can also use jQuery. This code is very basic:</p>
+
+<p><strong>JS Code</strong></p>
+
+<div class="language-javascript highlighter-rouge"><pre class="highlight"><code><span class="nx">$</span><span class="p">.</span><span class="nx">disableBtn</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+	<span class="nx">$</span><span class="p">(</span><span class="s1">'#myBtn'</span><span class="p">).</span><span class="nx">prop</span><span class="p">(</span><span class="s2">"disabled"</span><span class="p">,</span> <span class="p">(</span><span class="nx">_</span><span class="p">,</span> <span class="nx">val</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="o">!</span><span class="nx">val</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<p><strong>HTML Code</strong></p>
+
+<div class="language-html highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;button</span> <span class="na">id=</span><span class="s">"myBtn"</span><span class="nt">&gt;</span>Button<span class="nt">&lt;/button&gt;</span>
+
+<span class="nt">&lt;button</span> <span class="na">onclick=</span><span class="s">"$.disableBtn();"</span><span class="nt">&gt;</span>Change Button Status<span class="nt">&lt;/button&gt;</span>
+</code></pre>
+</div>
+
+<p>See jQuery Example <a href="https://jsfiddle.net/aligoren/n14pzh5g/">https://jsfiddle.net/aligoren/n14pzh5g/</a></p>
+
+<h2 id="angularjs-way">AngularJS Way</h2>
+
+<div class="language-html highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;body</span> <span class="na">ng-app=</span><span class="s">""</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;label&gt;</span>Change Button Status: <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"checkbox"</span> <span class="na">ng-model=</span><span class="s">"checked"</span><span class="nt">&gt;&lt;/label&gt;&lt;br/&gt;</span>
+  <span class="nt">&lt;button</span> <span class="na">ng-model=</span><span class="s">"button"</span> <span class="na">ng-disabled=</span><span class="s">"checked"</span><span class="nt">&gt;</span>Button<span class="nt">&lt;/button&gt;</span>
+<span class="nt">&lt;/body&gt;</span>
+</code></pre>
+</div>
+
+<p>See Example <a href="https://jsfiddle.net/aligoren/6nby94kj/">https://jsfiddle.net/aligoren/6nby94kj/</a></p>
+
+</div>
+<div class="comments">
+  <h3>Yorumlar</h3>
+  <div id="disqus_thread"></div>
+<script>
+
+/**
+*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+/*
+var disqus_config = function () {
+this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+*/
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+s.src = 'https://aligren.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                                
+</div>
+
+<!--<div class="related">
+  <h2>İlişkili Yazılar</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="/javascript-add-and-substract-days">
+            JavaScript Add and Substract Days
+            <small>02 Apr 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/jquery-ile-tabloda-arama-yapmak">
+            jQuery ile Tabloda Arama Yapmak
+            <small>05 Mar 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/javascript-currency-formatting">
+            JavaScript Currency Formatting
+            <small>17 Feb 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</div>
+-->
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if(!checkbox.checked ||
+             sidebar.contains(target) ||
+             (target === checkbox || target === toggle)) return;
+
+          checkbox.checked = false;
+        }, false);
+      })(document);
+    </script>
+  </body>
+</html>

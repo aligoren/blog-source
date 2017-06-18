@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Asp.Net MVC'De Çoklu Checkbox Kullanımı &middot; Ali GÖREN
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/lanyon.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+
+  <body>
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-item">
+    <p></p>
+    <img src="/images/ali.jpg" alt="my-photo">
+  </div>
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="/">Anasayfa</a>
+
+    
+
+    
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/about">About Me</a>
+        
+      
+    
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+  </nav>
+
+  <div class="sidebar-item">
+    <p>
+      &copy; 2017. Made with <span class="hearts">&hearts;</span> Jekyll
+    </p>
+  </div>
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Anasayfa">Ali GÖREN</a>
+            <small>Açık Kaynak, JavaScript, Python, .NET</small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post post-detail">
+  <h1 class="post-title">Asp.Net MVC'De Çoklu Checkbox Kullanımı</h1>
+  <span class="post-date">22 Oct 2016</span>
+  
+    <div class="tag-container">
+        Etiketler:
+        
+          <span class="tags" alt="asp.net etiketine sahip yazılar" title="asp.net etiketine sahip yazılar">asp.net</span>
+        
+          <span class="tags" alt="asp.net mvc etiketine sahip yazılar" title="asp.net mvc etiketine sahip yazılar">asp.net mvc</span>
+        
+          <span class="tags" alt="tips etiketine sahip yazılar" title="tips etiketine sahip yazılar">tips</span>
+        
+    </div>
+  
+  <p>Merhaba. Asp.NET ve özellikle MVC konusunda henüz yeniyim. Aslında MVC’den önce Asp.NET hiç kullanmadım. Ancak iş olunca konu direkt MVC’ye daldım. Zorluk çektiğim pek söylenemez. Model kavramına aşina olduktan sonra pek sıkıntı yok.
+<!--more-->
+Sıkıntı şu. Veritabanından gelen bazı değerler var. Bu değerlerin de ID değerleri var. Örnekte şöyle olsun:</p>
+
+<div class="language-html highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"checkbox"</span> <span class="na">name=</span><span class="s">"degerler"</span> <span class="na">value=</span><span class="s">"1"</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"checkbox"</span> <span class="na">name=</span><span class="s">"degerler"</span> <span class="na">value=</span><span class="s">"2"</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"checkbox"</span> <span class="na">name=</span><span class="s">"degerler"</span> <span class="na">value=</span><span class="s">"3"</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"checkbox"</span> <span class="na">name=</span><span class="s">"degerler"</span> <span class="na">value=</span><span class="s">"4"</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"checkbox"</span> <span class="na">name=</span><span class="s">"degerler"</span> <span class="na">value=</span><span class="s">"5"</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"checkbox"</span> <span class="na">name=</span><span class="s">"degerler"</span> <span class="na">value=</span><span class="s">"6"</span> <span class="nt">/&gt;</span>
+</code></pre>
+</div>
+
+<p>Bunların bazıları seçili olabilir bazıları olmayabilir. Şimdi ben gelen değerleri veritabanına ekletmek istiyorum. Belki başka yöntemleri de vardır bilemem ancak bunun MVC’de basit bir yolu var. Şimdi bu formun basit olarak şöyle post edildiğini düşünelim:</p>
+
+<div class="language-html highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;form</span> <span class="na">action=</span><span class="s">"/Home/DegerAl"</span> <span class="na">method=</span><span class="s">"post"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"checkbox"</span> <span class="na">name=</span><span class="s">"degerler"</span> <span class="na">value=</span><span class="s">"1"</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"checkbox"</span> <span class="na">name=</span><span class="s">"degerler"</span> <span class="na">value=</span><span class="s">"2"</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"checkbox"</span> <span class="na">name=</span><span class="s">"degerler"</span> <span class="na">value=</span><span class="s">"3"</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"checkbox"</span> <span class="na">name=</span><span class="s">"degerler"</span> <span class="na">value=</span><span class="s">"4"</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"checkbox"</span> <span class="na">name=</span><span class="s">"degerler"</span> <span class="na">value=</span><span class="s">"5"</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"checkbox"</span> <span class="na">name=</span><span class="s">"degerler"</span> <span class="na">value=</span><span class="s">"6"</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"submit"</span> <span class="na">value=</span><span class="s">"Ekle"</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;/form&gt;</span>
+</code></pre>
+</div>
+
+<p>Yukarıdaki yapıda name karşılığı <mark>degerler</mark> olan bir input grup görüyoruz. Bu name karşılıklarının aslında bir name array oluşturduğunu söyleyebiliriz. Bu array’in adı da <mark>degerler</mark> array’i olsun. O zaman C# tarafında bu değerleri hangi türden alacağımızı biliyoruz.</p>
+
+<p><code class="highlighter-rouge">[HttpPost]</code> attribute’unu çağıran method’a gelen argüman tipi array olacak. Basit olarak array tipli değer alan methodların nasıl oluştuğunu hatırlayalım:</p>
+
+<div class="language-csharp highlighter-rouge"><pre class="highlight"><code><span class="k">public</span> <span class="k">void</span> <span class="nf">DegerAlacak</span><span class="p">(</span><span class="kt">string</span><span class="p">[]</span> <span class="n">degerler</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="c1">//...
+</span><span class="p">}</span>
+</code></pre>
+</div>
+
+<p>Şimdi bu bilgilere göre basit anlamda bir checkbox list’ten gelen verinin nasıl alınacağını görelim:</p>
+
+<div class="language-csharp highlighter-rouge"><pre class="highlight"><code><span class="na">[HttpPost]</span>
+<span class="k">public</span> <span class="n">ActionResult</span> <span class="nf">DegerAl</span><span class="p">(</span><span class="kt">string</span><span class="p">[]</span> <span class="n">degerler</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">degerler</span><span class="p">.</span><span class="n">Length</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
+    <span class="p">{</span>
+        <span class="n">ViewData</span><span class="p">[</span><span class="s">"Degerler"</span><span class="p">]</span> <span class="p">+=</span> <span class="n">degerler</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nf">View</span><span class="p">();</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<p>Ben bunları <code class="highlighter-rouge">DegerAl</code> sayfasında yazdırdığım için ViewData içerisine atadım. Dilerseniz parametre alınan noktaya bir breakpoint koyarak gelen değerleri görüntüleyebilirsiniz.</p>
+
+<p><img src="/images/posts/mvc_check.png" alt="/images/posts/mvc_check.png" /></p>
+
+</div>
+<div class="comments">
+  <h3>Yorumlar</h3>
+  <div id="disqus_thread"></div>
+<script>
+
+/**
+*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+/*
+var disqus_config = function () {
+this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+*/
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+s.src = 'https://aligren.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                                
+</div>
+
+<!--<div class="related">
+  <h2>İlişkili Yazılar</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="/javascript-add-and-substract-days">
+            JavaScript Add and Substract Days
+            <small>02 Apr 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/jquery-ile-tabloda-arama-yapmak">
+            jQuery ile Tabloda Arama Yapmak
+            <small>05 Mar 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/javascript-currency-formatting">
+            JavaScript Currency Formatting
+            <small>17 Feb 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</div>
+-->
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if(!checkbox.checked ||
+             sidebar.contains(target) ||
+             (target === checkbox || target === toggle)) return;
+
+          checkbox.checked = false;
+        }, false);
+      })(document);
+    </script>
+  </body>
+</html>

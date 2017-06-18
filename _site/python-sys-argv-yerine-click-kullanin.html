@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      sys.argv Yerine Click Kullanın &middot; Ali GÖREN
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/lanyon.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+
+  <body>
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-item">
+    <p></p>
+    <img src="/images/ali.jpg" alt="my-photo">
+  </div>
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="/">Anasayfa</a>
+
+    
+
+    
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/about">About Me</a>
+        
+      
+    
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+  </nav>
+
+  <div class="sidebar-item">
+    <p>
+      &copy; 2017. Made with <span class="hearts">&hearts;</span> Jekyll
+    </p>
+  </div>
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Anasayfa">Ali GÖREN</a>
+            <small>Açık Kaynak, JavaScript, Python, .NET</small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post post-detail">
+  <h1 class="post-title">sys.argv Yerine Click Kullanın</h1>
+  <span class="post-date">12 Nov 2015</span>
+  
+  <p>Python ile konsol uygulamaları geliştirirken, konsolda bazen programı direkt olarak çağırmadan parametre kontrolü yapmamız gerekebiliyor. Örneğin şöyle bir çağrı:</p>
+
+<p><code class="highlighter-rouge">program.py --falan=filan</code></p>
+
+<p>Bu program basit ilkel yöntemlerce sys.argv kontrolü şeklinde yapılmakta. Ancak bunun doğruluğu için dahi uzunca uğraşmak gerekiyor.
+<!--more-->
+Bu sorunu aşmak için çeşitli kütüphaneler mevcuttur. Örneğin argparse, docopt gibi kütüphaneler de bu soruna kolaylık sağlıyorlar. Ancak bunların yapıları gerçekten çok karmaşık. Örneğin argparse interspersed dediğimiz argümanların devre dışı bırakılmasını desteklemiyor. Bu güvenlik açısından bir sorun oluşturabilir. Bu gibi bazı sorunlarla karşılaşmayı önlemek açısından Click, Armin Ronacher tarafından geliştirildi. Click kurulumu pip üzerinden yapılmakta.</p>
+
+<p><code class="highlighter-rouge">pip install Click</code></p>
+
+<p>komutu ile kurulumu yapabilirsiniz. Python 2.x ve 3.x sürümlerini desteklediğini de söylemek iyi olacaktır.</p>
+
+<p>Kurulumdan sonra ilk olarak basit bir Merhaba uygulaması yapabiliriz.</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">click</span>
+
+<span class="nd">@click.command</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">merhaba</span><span class="p">():</span>
+    <span class="n">click</span><span class="o">.</span><span class="n">echo</span><span class="p">(</span><span class="s">'Merhaba'</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">'__main__'</span><span class="p">:</span>
+    <span class="n">merhaba</span><span class="p">()</span>
+</code></pre>
+</div>
+
+<p>Click’i import ettikten sonra <code class="highlighter-rouge">command</code> decoratörünü çağırarak artık bunun click ile kontrol edileceğini söyleyebiliriz.</p>
+
+<p>Ayrıca click <code class="highlighter-rouge">print()</code> harici kendisi <code class="highlighter-rouge">click.echo()</code> işlevi ile printer görevini sağlayabiliyor. İlk uygulamamız bu oldu ve çalıştırma işlemini yapalım. Sonuçlara bakalım. Örneğin bu yukarıdaki kodları hello.py adında bir dosyanın içerisine yazdığımızı varsayalım.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>ali@linux $ hello
+Merhaba
+
+ali@linux $ hello -h
+Error: no such option: -h
+
+ali@linux $ hello --h
+Error: no such option: --h  Did you mean --help?
+
+ali@linux $ hello --help
+Usage: hello.py [OPTIONS]
+
+Options:
+  --help  Show this message and exit.
+</code></pre>
+</div>
+
+<p>Merhaba kısmından daha çok otomatik oluşturulan help sayfalarının dikkatinizi çektiğini umuyorum. Evet click otomatik olarak help sayfası oluşturabiliyor. Bunu siz yapmadan yapabiliyor.</p>
+
+<p>Örnek olarak ilk parametrelerimi tanımlayalım ve bununla ilgili bir program yapalım. Programın işlevi girilen adı, girilen sayı kadar yazdırmak olsun. Bunun normalde for döngüsü ile basitçe yapılacağını biliyoruz.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>sayaç =&gt; girilen sayı:
+    yazdır: girilen isim
+</code></pre>
+</div>
+
+<p>Evet sahte kodu bu şekilde. Normalde Python ile yapmak isteseydik de bu format üzerinden gidecektik. Şimdi tekrar Click ile geliştirmeye dönelim. Öncelikle <code class="highlighter-rouge">option()</code> ve <code class="highlighter-rouge">argument()</code> decoratörlerini ekleyelim ve bunlara alması gereken değerleri bildirelim. Bu eklenen değerleri de yani decoratörler içerisinde tanımlanan option ve argument değerlerini de kendimize ait olan işleve işlev değişken olarak atayalım.</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">click</span>
+
+<span class="nd">@click.command</span><span class="p">()</span>
+<span class="nd">@click.option</span><span class="p">(</span><span class="s">'--count'</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s">'Kac defa yazdiracagiz?'</span><span class="p">)</span>
+<span class="nd">@click.argument</span><span class="p">(</span><span class="s">'isim'</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s">'Ali'</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">merhaba</span><span class="p">(</span><span class="n">count</span><span class="p">,</span> <span class="n">isim</span><span class="p">):</span>
+    <span class="n">click</span><span class="o">.</span><span class="n">echo</span><span class="p">(</span><span class="s">'Merhaba'</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">'__main__'</span><span class="p">:</span>
+    <span class="n">merhaba</span><span class="p">()</span>
+</code></pre>
+</div>
+
+<p>Burada iki decorator ve bu decoratorlerin argümanları var. Option decoratorunun aldığı <code class="highlighter-rouge">–count</code> argümanı programa şu özelliği katar:</p>
+
+<p><code class="highlighter-rouge">program.py --count</code></p>
+
+<p>Daha sonra gelen ve 1 değerini almış olan default ise varsayılan değeri belirler. Burada varsayılan değerin belirli bir veri tipi yoktur. Ancak belirlenen veri tipini help metninde tür olarak gösterir. Biz sayaç işlemini yapacağımız için 1 dedik. Sonradan gelen help ise bu özelliğe dair yardım metnini gösterir. Yani program.py <code class="highlighter-rouge">–help</code> çağırıldığı zaman bu yardım metni de ayrıca gösterilir.</p>
+
+<p>Argument decoratörü ise bir argüman alır. Bu argüman da ayrıca bir default değer alabilir.</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>ali@linux <span class="nv">$ </span>hello
+Merhaba Ali
+
+ali@linux <span class="nv">$ </span>hello --help
+
+Usage: hello.py <span class="o">[</span>OPTIONS] <span class="o">[</span>ISIM]
+
+Options:
+  --count INTEGER  Kac defa yazdiracagiz?
+  --help           Show this message and exit.
+</code></pre>
+</div>
+
+<p>Son olarak programı tamamlayalım ve belirtilen miktar adedince yazdırma işlemini yaptıralım.</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">click</span>
+
+<span class="nd">@click.command</span><span class="p">()</span>
+<span class="nd">@click.option</span><span class="p">(</span><span class="s">'--count'</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s">'Kac defa yazdiracagiz?'</span><span class="p">)</span>
+<span class="nd">@click.argument</span><span class="p">(</span><span class="s">'isim'</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s">'Ali'</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">merhaba</span><span class="p">(</span><span class="n">count</span><span class="p">,</span> <span class="n">isim</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">count</span><span class="p">):</span>
+        <span class="n">click</span><span class="o">.</span><span class="n">echo</span><span class="p">(</span><span class="s">'Merhaba </span><span class="si">%</span><span class="s">s'</span> <span class="o">%</span> <span class="n">isim</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">'__main__'</span><span class="p">:</span>
+    <span class="n">merhaba</span><span class="p">()</span>
+</code></pre>
+</div>
+
+<p>Kodlarımız bunlar. Konsolda şöyle çağırıyoruz.</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>ali@linux <span class="nv">$ </span>hello --count<span class="o">=</span>5 Arkadaş?
+Merhaba Arkadaş?
+Merhaba Arkadaş?
+Merhaba Arkadaş?
+Merhaba Arkadaş?
+Merhaba Arkadaş?
+</code></pre>
+</div>
+
+<p>Evet şimdilik bu kadar.</p>
+
+</div>
+<div class="comments">
+  <h3>Yorumlar</h3>
+  <div id="disqus_thread"></div>
+<script>
+
+/**
+*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+/*
+var disqus_config = function () {
+this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+*/
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+s.src = 'https://aligren.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                                
+</div>
+
+<!--<div class="related">
+  <h2>İlişkili Yazılar</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="/javascript-add-and-substract-days">
+            JavaScript Add and Substract Days
+            <small>02 Apr 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/jquery-ile-tabloda-arama-yapmak">
+            jQuery ile Tabloda Arama Yapmak
+            <small>05 Mar 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/javascript-currency-formatting">
+            JavaScript Currency Formatting
+            <small>17 Feb 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</div>
+-->
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if(!checkbox.checked ||
+             sidebar.contains(target) ||
+             (target === checkbox || target === toggle)) return;
+
+          checkbox.checked = false;
+        }, false);
+      })(document);
+    </script>
+  </body>
+</html>

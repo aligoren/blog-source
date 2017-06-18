@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      JavaScript Currency Formatting &middot; Ali GÖREN
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/lanyon.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+
+  <body>
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-item">
+    <p></p>
+    <img src="/images/ali.jpg" alt="my-photo">
+  </div>
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="/">Anasayfa</a>
+
+    
+
+    
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/about">About Me</a>
+        
+      
+    
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+  </nav>
+
+  <div class="sidebar-item">
+    <p>
+      &copy; 2017. Made with <span class="hearts">&hearts;</span> Jekyll
+    </p>
+  </div>
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Anasayfa">Ali GÖREN</a>
+            <small>Açık Kaynak, JavaScript, Python, .NET</small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post post-detail">
+  <h1 class="post-title">JavaScript Currency Formatting</h1>
+  <span class="post-date">17 Feb 2017</span>
+  
+    <div class="tag-container">
+        Etiketler:
+        
+          <span class="tags" alt="JavaScript etiketine sahip yazılar" title="JavaScript etiketine sahip yazılar">JavaScript</span>
+        
+          <span class="tags" alt="Programming etiketine sahip yazılar" title="Programming etiketine sahip yazılar">Programming</span>
+        
+          <span class="tags" alt="Tips etiketine sahip yazılar" title="Tips etiketine sahip yazılar">Tips</span>
+        
+    </div>
+  
+  <p>Hi. I needed to Turkish currency formatting. I asked stackoverflow community.</p>
+
+<p>They advice me the Numeral.js library. I think it’s a useful library. I asked myself. Why do I need a library? I didn’t need jQuery or any other library.
+<!--more-->
+We can use <a href="https://developer.mozilla.org/tr/docs/Web/JavaScript/Reference/Global_Objects/NumberFormat">Intl.NumberFormat</a>. It’s also simple to use.</p>
+
+<h2 id="how-we-use">How we use?</h2>
+
+<div class="language-javascript highlighter-rouge"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">price</span> <span class="o">=</span> <span class="mi">1500</span>
+<span class="kd">var</span> <span class="nx">currency_symbol</span> <span class="o">=</span> <span class="s2">"₺"</span>
+
+<span class="kd">var</span> <span class="nx">formattedOutput</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Intl</span><span class="p">.</span><span class="nx">NumberFormat</span><span class="p">(</span><span class="s1">'tr-TR'</span><span class="p">,</span> <span class="p">{</span>
+    <span class="na">style</span><span class="p">:</span> <span class="s1">'currency'</span><span class="p">,</span>
+    <span class="na">currency</span><span class="p">:</span> <span class="s1">'TRY'</span><span class="p">,</span>
+    <span class="na">minimumFractionDigits</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+  <span class="p">});</span>
+
+<span class="k">return</span> <span class="nx">formattedOutput</span><span class="p">.</span><span class="nx">format</span><span class="p">(</span><span class="nx">price</span><span class="p">).</span><span class="nx">replace</span><span class="p">(</span><span class="nx">currency_symbol</span><span class="p">,</span> <span class="s1">''</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>We replaced currency symbol because we needed only price value.</p>
+
+<h2 id="options">Options</h2>
+
+<ul>
+  <li>style: Formatting type</li>
+  <li>currency: Which country’s currency?</li>
+  <li>minimumFractionDigits: Decimal setting</li>
+</ul>
+
+<p>See jsFiddle for example: <a href="https://jsfiddle.net/aligoren/qLgw02f0/">https://jsfiddle.net/aligoren/qLgw02f0/</a></p>
+
+</div>
+<div class="comments">
+  <h3>Yorumlar</h3>
+  <div id="disqus_thread"></div>
+<script>
+
+/**
+*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+/*
+var disqus_config = function () {
+this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+*/
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+s.src = 'https://aligren.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                                
+</div>
+
+<!--<div class="related">
+  <h2>İlişkili Yazılar</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="/javascript-add-and-substract-days">
+            JavaScript Add and Substract Days
+            <small>02 Apr 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/jquery-ile-tabloda-arama-yapmak">
+            jQuery ile Tabloda Arama Yapmak
+            <small>05 Mar 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/ionic-get-view-name">
+            How to Get Current View Name in Ionic Framework
+            <small>29 Jan 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</div>
+-->
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if(!checkbox.checked ||
+             sidebar.contains(target) ||
+             (target === checkbox || target === toggle)) return;
+
+          checkbox.checked = false;
+        }, false);
+      })(document);
+    </script>
+  </body>
+</html>

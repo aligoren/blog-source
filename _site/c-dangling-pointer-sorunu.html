@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      C Dangling Pointer Sorunu &middot; Ali GÖREN
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/lanyon.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+
+  <body>
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-item">
+    <p></p>
+    <img src="/images/ali.jpg" alt="my-photo">
+  </div>
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="/">Anasayfa</a>
+
+    
+
+    
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/about">About Me</a>
+        
+      
+    
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+  </nav>
+
+  <div class="sidebar-item">
+    <p>
+      &copy; 2017. Made with <span class="hearts">&hearts;</span> Jekyll
+    </p>
+  </div>
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Anasayfa">Ali GÖREN</a>
+            <small>Açık Kaynak, JavaScript, Python, .NET</small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post post-detail">
+  <h1 class="post-title">C Dangling Pointer Sorunu</h1>
+  <span class="post-date">21 Jul 2014</span>
+  
+  <p>Bir pointer düşünelim bu pointer’ı bir değişkene atayalım. Sonra ikinci bir pointer olduğunu varsayalım bu ikinci pointer’ı da ilk pointer’a atayalım. Bu durumda iki pointer da aynı adrese bakmış oluyor. Bu durum <a href="https://en.wikipedia.org/wiki/Segmentationfault">segmentation fault</a> hatasina sebep olmaktadir ve <a href="https://en.wikipedia.org/wiki/Bufferoverflow">Buffer Overflow</a> yapılmasına davet çıkardığı için güvenlik açığı oluşturabilir.</p>
+
+<p>İlk pointer fflush ve stding parametresiyle temizleniyor yani deallocate ediliyor varsayalım. Bu durumda bu bölgenin değeri nil olmakta. Ve bu durumda ikinci pointer dangling pointer yani sarkıtılmış gösterge(o kadar çevirisini aradım en mantıklısı bu oldu) olmakta.
+<!--more-->
+Çözüm için bazı yöntemler var. Bunlardan birisi akıllı pointer kullanımıdır. C++11 ile kullanımı biten <code class="highlighter-rouge">auto_ptr</code> ve onun yerine gelen <code class="highlighter-rouge">unique_ptr</code> kullanılabilir ilk yöntemlerdir. Bir de bunun başka bir alternatifi olarak tombstone metodu var. Burada da yapılan şey pointer değişkenin başına başka bir değer ekliyoruz.</p>
+
+<p>Öncelikle bahsettiğimiz konuya dair bir örnek kod verelim.</p>
+
+<p><img src="/images/posts/3.png" alt="/images/posts/3.png" /></p>
+
+<p>Bu hataya yakalanmış bir kodun çıktısı şöyle olacaktır. Tabii bu sistemden sisteme göre değişir. Aslında bu çıktı çöp bir değerdir.</p>
+
+<p>Örneğin koding.com sanal makinesinde yaptığım denemenin sonucu:</p>
+
+<p><img src="/images/posts/4.png" alt="/images/posts/4.png" /></p>
+
+<p>Bu da kendi makinemde yaptığım işlemin sonucu:</p>
+
+<p><img src="/images/posts/5.png" alt="/images/posts/5.png" /></p>
+
+<p>Bu hatanın bize verdiği çıktılar compile time’da şöyle olacaktır:</p>
+
+<p><strong>warning: function returns address of local variable [-Wreturn-local-addr]</strong></p>
+
+<p>ya da</p>
+
+<p><strong>warning: function returns address of local variable</strong></p>
+
+<p>Bu hataları alıyorsak derleme zamanında demek ki bir yerlerde dangling pointer oluşmuştur. Bunu çözmemiz aslında basit. Verdiğimiz kodda oluşturduğumuz x değişkenini static variable’a çevirmemiz yetecektir.</p>
+
+<p>Yani bu durumda şöyle bir değişiklik olacak:</p>
+
+<p><img src="/images/posts/6.png" alt="/images/posts/6.png" /></p>
+
+<p>Şimdi artık bu kodumuz dangling pointerdan arındırılmış vaziyette. Buradaki x değişkeni yerel bir değişkendir. x değişkeninin adresi cagri işlevi içerisinde döndürüldükten sonra sıfırlandı. Ancak pointer hala bu adresi işaret ediyordu. Dangling pointer hatasının açıklaması buydu. Biz bu değişiklik ile bu hatayı çözüme kavuşturmuş olduk.</p>
+
+<p>Koding sanal makinesindeki çıktı:</p>
+
+<p><img src="/images/posts/7.png" alt="/images/posts/7.png" /></p>
+
+<p>Kendi makinemdeki çıktı:</p>
+
+<p><img src="/images/posts/8.png" alt="/images/posts/8.png" /></p>
+
+<h2 id="referanslar">Referanslar:</h2>
+
+<p><a href="https://software.intel.com/en-us/articles/pointer-checker-to-detect-buffer-problems-and-dangling-pointers-part-2">https://software.intel.com/en-us/articles/pointer-checker-to-detect-buffer-problems-and-dangling-pointers-part-2</a></p>
+
+<p><a href="https://www.owasp.org/images/f/fa/OWASPIL8DanglingPointer.pdf">https://www.owasp.org/images/f/fa/OWASPIL8DanglingPointer.pdf</a></p>
+
+<p><a href="https://www.blackhat.com/presentations/bh-usa-07/Afek/Whitepaper/bh-usa-07-afek-WP.pdf">https://www.blackhat.com/presentations/bh-usa-07/Afek/Whitepaper/bh-usa-07-afek-WP.pdf</a></p>
+
+<p><a href="http://www.ccs.neu.edu/home/will/CPP/dangling.html">http://www.ccs.neu.edu/home/will/CPP/dangling.html</a></p>
+
+<p><a href="http://www.codeproject.com/Articles/378335/Dangling-Pointers-Pathology-Prevention-and-Cure">http://www.codeproject.com/Articles/378335/Dangling-Pointers-Pathology-Prevention-and-Cure</a></p>
+
+<p><a href="http://www.democraticprogrammers.com/dangling-pointer-problem-cpp-example/">http://www.democraticprogrammers.com/dangling-pointer-problem-cpp-example/</a></p>
+
+<p><a href="http://www.c4learn.com/c-programming/c-dangling-pointer-causes/">http://www.c4learn.com/c-programming/c-dangling-pointer-causes/</a></p>
+
+<p><a href="http://www.geekinterview.com/question_details/66703">http://www.geekinterview.com/question_details/66703</a></p>
+
+</div>
+<div class="comments">
+  <h3>Yorumlar</h3>
+  <div id="disqus_thread"></div>
+<script>
+
+/**
+*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+/*
+var disqus_config = function () {
+this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+*/
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+s.src = 'https://aligren.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                                
+</div>
+
+<!--<div class="related">
+  <h2>İlişkili Yazılar</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="/javascript-add-and-substract-days">
+            JavaScript Add and Substract Days
+            <small>02 Apr 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/jquery-ile-tabloda-arama-yapmak">
+            jQuery ile Tabloda Arama Yapmak
+            <small>05 Mar 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/javascript-currency-formatting">
+            JavaScript Currency Formatting
+            <small>17 Feb 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</div>
+-->
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if(!checkbox.checked ||
+             sidebar.contains(target) ||
+             (target === checkbox || target === toggle)) return;
+
+          checkbox.checked = false;
+        }, false);
+      })(document);
+    </script>
+  </body>
+</html>

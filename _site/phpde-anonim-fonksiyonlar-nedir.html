@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      PHP'de Anonim Fonksiyonlar &middot; Ali GÖREN
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/lanyon.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+
+  <body>
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-item">
+    <p></p>
+    <img src="/images/ali.jpg" alt="my-photo">
+  </div>
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="/">Anasayfa</a>
+
+    
+
+    
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/about">About Me</a>
+        
+      
+    
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+  </nav>
+
+  <div class="sidebar-item">
+    <p>
+      &copy; 2017. Made with <span class="hearts">&hearts;</span> Jekyll
+    </p>
+  </div>
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Anasayfa">Ali GÖREN</a>
+            <small>Açık Kaynak, JavaScript, Python, .NET</small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post post-detail">
+  <h1 class="post-title">PHP'de Anonim Fonksiyonlar</h1>
+  <span class="post-date">15 Jan 2017</span>
+  
+    <div class="tag-container">
+        Etiketler:
+        
+          <span class="tags" alt="PHP etiketine sahip yazılar" title="PHP etiketine sahip yazılar">PHP</span>
+        
+          <span class="tags" alt="Programming etiketine sahip yazılar" title="Programming etiketine sahip yazılar">Programming</span>
+        
+          <span class="tags" alt="Tips etiketine sahip yazılar" title="Tips etiketine sahip yazılar">Tips</span>
+        
+    </div>
+  
+  <p>Selamlar. Bu yazıda size closure yani anonim fonksiyonları göstereceğim. Öğrenme aşamasından önce yani sadece ilk bakışta kafamı karıştırmıştı. Ama zor değilmiş.</p>
+
+<p>Şimdi elimizde bir nesne var diyelim. Bu nesnenin bir instance’ı yani örneğini oluşturdunuz ve bu oluşturulan instance’lara ait methodları kullanarak yeni bir instance oluşturabileceğinizi düşünün daha önce düşündünüz mü bilmiyorum.</p>
+
+<h2 id="yalnız-değilsiniz">Yalnız Değilsiniz!</h2>
+
+<!--more-->
+
+<p>Eğer hayır diyorsanız yalnız olmadığınıza inancım tam. Size reflection ve closure kavramlarının nasıl kullanılacağını göstermek için bu yazıyı yazdım.</p>
+
+<p>Öncelikle closure ya da anonym functions olarak karşımıza çıkar bu kavram. Onu bilelim. PHP konu olduğu için belirtmek gerekiyor ki 5.3 sürümünden itibaren closure’ları kullanabiliriz. Yanılmıyorsam günümüzde desteklemeyen pek az yer vardır.</p>
+
+<p>Zaten bu closure kavramını araştırsanız internette bir sürü kaynak bulabilirsiniz. Ben bu yazıyı yazmadan önce baya baya yazanlar olmuştur gerek Türkçe gerekse İngilizce dilinde mevcuttur yani. Çok uzatmayayım.</p>
+
+<h2 id="İsimsiz">İsimsiz</h2>
+
+<p><img src="/images/posts/bourne.jpg" alt="/images/posts/bourne.jpg" /></p>
+
+<p>İsimsiz denilince aklıma Jason Bourne gelir. Bilmiyorum Bourne serisini izlediniz mi ama kendisi kimliksiz aslında adı olmayan kafasının içinde kaybolan bir abimiz. Ama merak etmeyin bu anonim fonksiyonlar öyle aksiyon dolu bir şey değil.</p>
+
+<p>Anonim fonksiyonlar dediğime göre bu fonksiyonların nasıl fonksiyonlar olacağını adlarından anlamış olmalısınız. Anonim fonksiyonlar. Eğer isme sahip olmayan fonksiyon tanımı aklınıza geliyorsa doğru düşünmüşsünüz. Basit bir örneği şöyle size gösterebilirim.</p>
+
+<div class="language-php highlighter-rouge"><pre class="highlight"><code><span class="cp">&lt;?php</span>
+<span class="nv">$isimsiz</span> <span class="o">=</span> <span class="k">function</span><span class="p">()</span> <span class="p">{</span>
+	<span class="k">echo</span> <span class="s1">'Merhaba'</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="nv">$isimsiz</span><span class="p">();</span> <span class="c1">// Çıktısı Merhaba;
+</span><span class="cp">?&gt;</span>
+</code></pre>
+</div>
+
+<p>Kodu dikkatli incelersiniz fonksiyona herhangi bir isim verilmedi ancak oluşturulduğu anda <code class="highlighter-rouge">$isimsiz</code> isimli bir değişkene atamasını yaptık. Yani normal bir değişken oluşturma işlemini yaptınız sonuna noktalı virgülünü de koydunuz. Tek farkı değişkene atanan şey direkt bir value yani değer değil. Bir fonksiyon. Bu kısmı da uzun uzun yazmayayım. Sadece bu fonksiyonları çağırırken başlarına dollar sign yani $ koymanız gerektiğini unutmayın.</p>
+
+<p>Bu fonksiyonların bir başka metoda parameter olarak da geçilebileceğini unutmayın. Basit bir başka örnek vereyim bu da fonksiyona, anonim bir fonksiyon eklenebilmesine dair olsun:</p>
+
+<div class="language-php highlighter-rouge"><pre class="highlight"><code><span class="cp">&lt;?php</span>
+<span class="k">function</span> <span class="nf">benim_fonksiyonum</span><span class="p">(</span><span class="nv">$anonim_fonksiyon</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="nv">$anonim_fonksiyon</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="nx">benim_fonksiyonum</span><span class="p">(</span><span class="k">function</span><span class="p">()</span> <span class="p">{</span>
+	<span class="k">echo</span> <span class="s1">'Fonksiyon içinde fonksiyon mu olur? Oluyor işte'</span><span class="p">;</span>
+<span class="p">});</span>
+<span class="cp">?&gt;</span>
+</code></pre>
+</div>
+
+<p>Yukarıdaki yönteme eğer frameworklere aşinaysanız ya da onları incelediyseniz denk gelmişsinizdir. Kısacası böyle de kullanabilirsiniz. Ben bu yöntemi kullanarak şöyle basit bir repo olışturdum:</p>
+
+<p><a href="https://github.com/aligoren/Request">https://github.com/aligoren/Request</a></p>
+
+<p>Readme dosyasını incelerseniz aslında anlattığım şeyin ne gibi noktalarda kullanılabileceğini de anlamış olursunuz. Yazıyı çok uzatmak istemiyorum ancak bu konuda <a href="https://php.net/manual/tr/class.reflectionmethod.php">ReflectionMethod</a> sınıfını iyi incelemenizi öneririm. Bu sayede direkt olarak closure kullanımını da deneyimlemiş olursunuz.</p>
+
+<p>Umarım faydalı olmuştur.</p>
+
+</div>
+<div class="comments">
+  <h3>Yorumlar</h3>
+  <div id="disqus_thread"></div>
+<script>
+
+/**
+*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+/*
+var disqus_config = function () {
+this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+*/
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+s.src = 'https://aligren.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                                
+</div>
+
+<!--<div class="related">
+  <h2>İlişkili Yazılar</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="/javascript-add-and-substract-days">
+            JavaScript Add and Substract Days
+            <small>02 Apr 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/jquery-ile-tabloda-arama-yapmak">
+            jQuery ile Tabloda Arama Yapmak
+            <small>05 Mar 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/javascript-currency-formatting">
+            JavaScript Currency Formatting
+            <small>17 Feb 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</div>
+-->
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if(!checkbox.checked ||
+             sidebar.contains(target) ||
+             (target === checkbox || target === toggle)) return;
+
+          checkbox.checked = false;
+        }, false);
+      })(document);
+    </script>
+  </body>
+</html>

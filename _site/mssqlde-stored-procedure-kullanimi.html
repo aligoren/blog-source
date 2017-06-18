@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      MSSQL'de Stored Procedure Kullanımı &middot; Ali GÖREN
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/lanyon.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+
+  <body>
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-item">
+    <p></p>
+    <img src="/images/ali.jpg" alt="my-photo">
+  </div>
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="/">Anasayfa</a>
+
+    
+
+    
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/about">About Me</a>
+        
+      
+    
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+  </nav>
+
+  <div class="sidebar-item">
+    <p>
+      &copy; 2017. Made with <span class="hearts">&hearts;</span> Jekyll
+    </p>
+  </div>
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Anasayfa">Ali GÖREN</a>
+            <small>Açık Kaynak, JavaScript, Python, .NET</small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post post-detail">
+  <h1 class="post-title">MSSQL'de Stored Procedure Kullanımı</h1>
+  <span class="post-date">04 Oct 2016</span>
+  
+    <div class="tag-container">
+        Etiketler:
+        
+          <span class="tags" alt="sql etiketine sahip yazılar" title="sql etiketine sahip yazılar">sql</span>
+        
+          <span class="tags" alt="mssql etiketine sahip yazılar" title="mssql etiketine sahip yazılar">mssql</span>
+        
+          <span class="tags" alt="sql server etiketine sahip yazılar" title="sql server etiketine sahip yazılar">sql server</span>
+        
+    </div>
+  
+  <p>Daha önceleri çok fazla veritabanı kullanan işlemler yapmadım. O yüzden şu sıralar pek yeniyim. Öğrenme aşamaları hızlıca gelişiyor.</p>
+
+<p>Stored Procedure dediğimiz şey ise veritabanında tutulan ve ilk çalışma derlenen daha sonraları tekrar derlenmeye ihtiyaç duyulmayan SQL ifadeleridir. Yani bir Stored Procedure oluşturursanız tekrar aynı isimde Stored Procedure’ü aynı veritabanı için oluşturamıyorsunuz.
+<!--more-->
+Bu gibi durumlarda oluşturduğunuz Stored Procedure’ü Modify etmeniz gerekiyor ki bu da ALTER komutu ile birlikte oluyor. Stored Procedure’lerin belli başlı avantajları vardır.</p>
+
+<p>Bu avantajlardan en önemlisi kuşkusuz hızlı çalışmalarıdır. Bunun sebebi ise oluşturulan Stored Procedure bir kere derlendikten sonra tekrar tekrar derlemenize gerek kalmaz. O zaman buradan Stored Procedure’lerin veritabanı tarafında saklandığını anlayabiliriz.</p>
+
+<p>Eğer uygulama katmanında çalışıyor olsaydık tek bir sorgu tekrar tekrar derlenmelidir ki bu da büyük sistemlerde büyük bir sorun haline gelebilir. Tabii ki zaman kaybı anlamına da geliyor. Yanlış anlaşılmasın C# tarafında SQL kodu yazıp, INSERT ettirmekle burada yazıp ettirmek mantık olarak pek farklı değil.</p>
+
+<p>Ama olur da uygulama katmanında kullanmanız gerekiyordur size daha rahat bir geliştirme şansı sunar ki şöyle düşünün 20 satırlık SQL sorgunuz var ve siz bunu Entity Framework kullanarak geliştirmiyorsunuz. Her sorgunun 20 satır sürdüğünü hayal edersek sanırım Database Provider baya bir şişecektir. Stored Procedure kullanmak bunun da önüne geçebilir.</p>
+
+<p>Bir diğer avantaj ise benim geçenlerde kullandığım özellikleri kullandırması yani T-SQL komutlarını kullanabiliyorsunuz ve if-else gibi while gibi işlemleri de gerçekleştirebiliyorsunuz.</p>
+
+<p>Eğer birisi veritabanınıza erişim imkanına sahipse yapacak bir şey yok ama veritabanı erişimine sahip olmayıp bir şekilde uygulama katmanındaki kodlara erişimi olan kişiler sadece Stored Procedure ve o Procedure’ün aldığı parametreleri göreceği için güvenlik anlamında da avantaj sağlar.</p>
+
+<p>Peki nasıl kullanabiliriz dediğinizi biliyorum. Aslında bir Stored Procedure çok zor da değil. Parametre alan ya da almayan olarak türleri vardır ve RETURN komutunu da kullanabilirsiniz. Basit olarak parametre alamayan bir Stored Procedure şöyle oluşturulur:</p>
+
+<p>CREATE PROC ProcedureAdi şeklinde ya da CREATE PROCEDURE ProcedureAdi şeklinde olabilir. Ben genellikle PROC kullanıyorum. Şimdi parametre almayan ve sadece SELECT sorgusunu döndüren bir PROC yazalım:</p>
+
+<div class="language-sql highlighter-rouge"><pre class="highlight"><code><span class="k">CREATE</span> <span class="n">PROC</span> <span class="n">GetUsers</span>
+<span class="k">AS</span>
+    <span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">Users</span>
+</code></pre>
+</div>
+
+<p>Evet parametre almayan basit olan bir Procedure yazdık bile. Bu Procedure bize kullanıcıları listelemede yardımcı olacaktır. Hmm nasıl çağırıldığını yazmadık:/</p>
+
+<p>EXEC komutunu kullanarak çalıştırma işlemini yaparız. Eğer Procedure parametre almıyorsa basit şöyledir:</p>
+
+<div class="language-sql highlighter-rouge"><pre class="highlight"><code><span class="k">EXEC</span> <span class="n">GetUsers</span>
+</code></pre>
+</div>
+
+<p>Peki tamam parametreli olanlar nasıl? Herhangi bir programlama dilinde method oluşturduğunuzu düşünün ve bu metodların parametre aldığını düşünün. Aynı şekilde Procedure’ler de parametreleri böyle alırlar. Tek farkı ise parantezler içerisinde parametreler almak yerine normal şekilde almak:</p>
+
+<div class="language-sql highlighter-rouge"><pre class="highlight"><code><span class="k">EXEC</span> <span class="n">GetUsers</span> <span class="s1">'Ali'</span>
+</code></pre>
+</div>
+
+<p>Buradaki senaryo şöyle:</p>
+
+<div class="language-sql highlighter-rouge"><pre class="highlight"><code><span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">Users</span> <span class="k">WHERE</span> <span class="n">Name</span><span class="o">=</span><span class="s1">'Ali'</span>
+</code></pre>
+</div>
+
+<p>Bunu Stored Procedure ile şöyle yapabiliriz.</p>
+
+<div class="language-sql highlighter-rouge"><pre class="highlight"><code><span class="k">CREATE</span> <span class="n">PROC</span> <span class="n">GetSpesificUser</span>
+	<span class="o">@</span><span class="n">UserName</span> <span class="n">nvarchar</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span>
+<span class="k">AS</span>
+    <span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">Users</span> <span class="k">WHERE</span> <span class="n">Name</span><span class="o">=@</span><span class="n">UserName</span>
+
+<span class="k">EXEC</span> <span class="n">GetSpesificUser</span> <span class="s1">'Ali'</span>
+</code></pre>
+</div>
+
+<p>Eğer birden fazla parametre alacaksa da virgülle belirtilmeli.</p>
+
+<div class="language-sql highlighter-rouge"><pre class="highlight"><code><span class="k">CREATE</span> <span class="n">PROC</span> <span class="n">GetSpesificUserWithID</span>
+	<span class="o">@</span><span class="n">ID</span> <span class="n">int</span><span class="p">,</span>
+	<span class="o">@</span><span class="n">UserName</span> <span class="n">nvarchar</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span>
+<span class="k">AS</span>
+    <span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">Users</span> <span class="k">WHERE</span> <span class="n">ID</span><span class="o">=@</span><span class="n">ID</span> <span class="k">and</span> <span class="n">Name</span><span class="o">=@</span><span class="n">UserName</span>
+</code></pre>
+</div>
+
+<p>Tabii bu Stored Procedure çalıştırılırken de alacağı parametre sırasına göre parametreleri, aldığı türe göre Stored Procedure’e yollamalıyız. Örnek:</p>
+
+<div class="language-sql highlighter-rouge"><pre class="highlight"><code><span class="k">EXEC</span> <span class="n">GetSpesificUserWithID</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">'Ali
+</span></code></pre>
+</div>
+
+</div>
+<div class="comments">
+  <h3>Yorumlar</h3>
+  <div id="disqus_thread"></div>
+<script>
+
+/**
+*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+/*
+var disqus_config = function () {
+this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+*/
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+s.src = 'https://aligren.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                                
+</div>
+
+<!--<div class="related">
+  <h2>İlişkili Yazılar</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="/javascript-add-and-substract-days">
+            JavaScript Add and Substract Days
+            <small>02 Apr 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/jquery-ile-tabloda-arama-yapmak">
+            jQuery ile Tabloda Arama Yapmak
+            <small>05 Mar 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/javascript-currency-formatting">
+            JavaScript Currency Formatting
+            <small>17 Feb 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</div>
+-->
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if(!checkbox.checked ||
+             sidebar.contains(target) ||
+             (target === checkbox || target === toggle)) return;
+
+          checkbox.checked = false;
+        }, false);
+      })(document);
+    </script>
+  </body>
+</html>

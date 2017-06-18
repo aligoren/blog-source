@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      jQuery ile Tabloda Arama Yapmak &middot; Ali GÖREN
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/lanyon.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+
+  <body>
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-item">
+    <p></p>
+    <img src="/images/ali.jpg" alt="my-photo">
+  </div>
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="/">Anasayfa</a>
+
+    
+
+    
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/about">About Me</a>
+        
+      
+    
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+  </nav>
+
+  <div class="sidebar-item">
+    <p>
+      &copy; 2017. Made with <span class="hearts">&hearts;</span> Jekyll
+    </p>
+  </div>
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Anasayfa">Ali GÖREN</a>
+            <small>Açık Kaynak, JavaScript, Python, .NET</small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post post-detail">
+  <h1 class="post-title">jQuery ile Tabloda Arama Yapmak</h1>
+  <span class="post-date">05 Mar 2017</span>
+  
+    <div class="tag-container">
+        Etiketler:
+        
+          <span class="tags" alt="JavaScript etiketine sahip yazılar" title="JavaScript etiketine sahip yazılar">JavaScript</span>
+        
+          <span class="tags" alt="jQuery etiketine sahip yazılar" title="jQuery etiketine sahip yazılar">jQuery</span>
+        
+          <span class="tags" alt="Tips etiketine sahip yazılar" title="Tips etiketine sahip yazılar">Tips</span>
+        
+    </div>
+  
+  <p>Selamlar. Bu yazıda sizlere çoğunuzun kullanmış olabileceği bir eklentinin daha basit halini anlatacağım. <a href="https://datatables.net/">jQuery Datatables</a> eklentisi muazzam iş gören bir eklenti.
+<!--more-->
+<img src="/images/posts/ridvan.jpg" alt="/images/posts/ridvan.jpg" />
+<em>Çizerken baya zorlandım</em></p>
+
+<p>Ancak bazı durumlarda gerekmeyebilir. Bu gibi durumlarda gereksiz eklenti kullanımı performansa da etki ediyor haliyle. Elimizde basit olarak bir tablo yapısının olduğunu varsayalım. Tabi arama kutumuz da o basit yapının içinde olsun :)</p>
+
+<div class="language-html highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"text"</span> <span class="na">class=</span><span class="s">"search"</span> <span class="na">placeholder=</span><span class="s">"Ürün Arama..."</span><span class="nt">&gt;</span>
+<span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">"counter"</span><span class="nt">&gt;&lt;/span&gt;</span>
+<span class="nt">&lt;table</span> <span class="na">class=</span><span class="s">"results"</span> <span class="na">cellspacing=</span><span class="s">"0"</span> <span class="na">width=</span><span class="s">"100%"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;thead&gt;</span>
+        <span class="nt">&lt;tr</span> <span class="na">class=</span><span class="s">"active"</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;th&gt;</span>Ürün Adı<span class="nt">&lt;/th&gt;</span>
+            <span class="nt">&lt;th&gt;</span>Miktar<span class="nt">&lt;/th&gt;</span>
+            <span class="nt">&lt;th&gt;</span>Birim Fiyat<span class="nt">&lt;/th&gt;</span>
+            <span class="nt">&lt;th&gt;</span>Tutar<span class="nt">&lt;/th&gt;</span>
+            <span class="nt">&lt;th&gt;</span>Personel<span class="nt">&lt;/th&gt;</span>
+            <span class="nt">&lt;th&gt;</span>İşlemler<span class="nt">&lt;/th&gt;</span>
+        <span class="nt">&lt;/tr&gt;</span>
+    <span class="nt">&lt;/thead&gt;</span>
+    <span class="nt">&lt;tbody&gt;</span>
+        <span class="nt">&lt;tr&gt;</span>
+            <span class="nt">&lt;td&gt;</span>Patates<span class="nt">&lt;/td&gt;</span>
+            <span class="nt">&lt;td&gt;</span>10<span class="nt">&lt;/td&gt;</span>
+            <span class="nt">&lt;td&gt;</span>15<span class="nt">&lt;/td&gt;</span>
+            <span class="nt">&lt;td&gt;</span>150<span class="nt">&lt;/td&gt;</span>
+            <span class="nt">&lt;td&gt;</span>Ali<span class="nt">&lt;/td&gt;</span>
+            <span class="nt">&lt;td&gt;</span>Sat<span class="nt">&lt;/td&gt;</span>
+        <span class="nt">&lt;/tr&gt;</span>
+        <span class="c">&lt;!-- Buralar eskiden TR'likti --&gt;</span>
+    <span class="nt">&lt;/tbody&gt;</span>
+    <span class="nt">&lt;tfoot&gt;</span>
+        <span class="nt">&lt;tr</span> <span class="na">class=</span><span class="s">"warning no-result"</span> <span class="na">style=</span><span class="s">"display:none;"</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;td</span> <span class="na">colspan=</span><span class="s">"8"</span><span class="nt">&gt;&lt;i</span> <span class="na">class=</span><span class="s">"fa fa-warning"</span><span class="nt">&gt;&lt;/i&gt;</span> Bulunamadı<span class="nt">&lt;/td&gt;</span>
+        <span class="nt">&lt;/tr&gt;</span>
+    <span class="nt">&lt;/tfoot&gt;</span>
+<span class="nt">&lt;/table&gt;</span>
+</code></pre>
+</div>
+
+<p>Senaryo bize der ki kardeşim, ben inputu her çağırdığımda sen tablodaki satırlar arasında arama gerçekleştir. Spesifik bir cell de belirtebilirdik ancak tüm cell’leri gezmesini düşünüyoruz. DataTables öyle çalışıyor çünkü.</p>
+
+<p>Yukarıda <code class="highlighter-rouge">search</code> class’ına sahip inputu yakalayıp, keyup event’ini kontrol etmemiz gerekiyor. Bu kontrol gerçekleşirken de inputtaki değeri de almalıyız. Tabi bulunanların sayısını tutacağımız bir değişkene de ihtiyacımız var.</p>
+
+<div class="language-javascript highlighter-rouge"><pre class="highlight"><code><span class="nx">$</span><span class="p">(</span><span class="s2">".search"</span><span class="p">).</span><span class="nx">keyup</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">searchTerm</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s2">".search"</span><span class="p">).</span><span class="nx">val</span><span class="p">();</span>
+    <span class="kd">var</span> <span class="nx">bulunan</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="c1">//...</span>
+<span class="p">})</span>
+</code></pre>
+</div>
+
+<p>Buraya kadar her şey basit bir select işlemi. Bundan sonrasında ise tabloda kontrolü sağlamalıyız.</p>
+
+<p>Eğer tablonuz herhangi bir şekilde <code class="highlighter-rouge">thead</code> ya da <code class="highlighter-rouge">tfoot</code> elementlerine sahip değilse direkt tablodaki tr elementlerini yakalayabilirsiniz.</p>
+
+<p>Ama benim gibi tablonun gerçek kısmı olan tbody kısmıyla çalışıyorsanız mutlaka bunu belirtmelisiniz.</p>
+
+<p>Tabloda kontrolü her tr elemanını tbody altında arayacak şekilde gerçekleştirmeliyiz. Yani tbody altındaki her tr’yi gezeceğiz. Ayrıca tabi tablonun aramasını yaptığımız kısmını da bir değişkene atayalım ki her defasında $(this) yazmaktan kurtulalım :)</p>
+
+<div class="language-javascript highlighter-rouge"><pre class="highlight"><code><span class="nx">$</span><span class="p">(</span><span class="s1">'.results tbody tr'</span><span class="p">).</span><span class="nx">each</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">table</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">)</span>
+    <span class="c1">//...</span>
+<span class="p">})</span>
+</code></pre>
+</div>
+
+<p>Tamam şimdi kalıyor tek bir kısım. Bu son kısımda gezilen satırın text’ini alıyoruz ve <code class="highlighter-rouge">toLowerCase()</code> metodunu kullanarak satırdaki tüm textleri küçültürüyoruz.</p>
+
+<p>Ardından da <strong>ES6</strong> ile gelen <code class="highlighter-rouge">includes()</code> metodunu kullanarak searchTerm’deki değeri içerip içermediğini kontrol ediyoruz. Burada searchTerm ise bizim inputtan gelen değer.</p>
+
+<div class="language-javascript highlighter-rouge"><pre class="highlight"><code><span class="k">if</span> <span class="p">(</span><span class="nx">table</span><span class="p">.</span><span class="nx">text</span><span class="p">().</span><span class="nx">toLowerCase</span><span class="p">().</span><span class="nx">includes</span><span class="p">(</span><span class="nx">searchTerm</span><span class="p">.</span><span class="nx">toLowerCase</span><span class="p">()))</span> <span class="p">{</span>
+    <span class="nx">bulunan</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="nx">table</span><span class="p">.</span><span class="nx">show</span><span class="p">()</span>
+    <span class="nx">$</span><span class="p">(</span><span class="s2">".counter"</span><span class="p">).</span><span class="nx">text</span><span class="p">(</span><span class="nx">bulunan</span> <span class="o">+</span> <span class="s2">" kayıt bulundu"</span><span class="p">)</span>
+    <span class="nx">$</span><span class="p">(</span><span class="s2">".no-result"</span><span class="p">).</span><span class="nx">css</span><span class="p">(</span><span class="s1">'display'</span><span class="p">,</span> <span class="s1">'none'</span><span class="p">)</span>
+<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="nx">table</span><span class="p">.</span><span class="nx">hide</span><span class="p">()</span>
+    <span class="nx">$</span><span class="p">(</span><span class="s2">".counter"</span><span class="p">).</span><span class="nx">text</span><span class="p">(</span><span class="nx">bulunan</span> <span class="o">+</span> <span class="s2">" kayıt bulundu"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">bulunan</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">$</span><span class="p">(</span><span class="s2">".no-result"</span><span class="p">).</span><span class="nx">css</span><span class="p">(</span><span class="s1">'display'</span><span class="p">,</span> <span class="s1">''</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<p>Yukarıda eğer gezilen satırda, aranan değere dair bir şeyler yer alıyorsa gezilen satırı aktif et diyoruz. Bu cümle bize, diğer satırların kaybolacağı anlamını veriyor ki öyle de olacak.</p>
+
+<p>Tabi <code class="highlighter-rouge">bulunan</code> isimli değişkenin değerini 1 arttırıp <code class="highlighter-rouge">counter</code> class’ına sahip span etiketinin textine ekliyoruz. Böylece kaç sonuç bulunmuş kullanıcıya sunabiliriz.</p>
+
+<p>Son olarak da eğer <code class="highlighter-rouge">no-result</code> class’ı aktif durumdaysa onu kapatalım ki çünkü sonuç bulunmuş durumda.</p>
+
+<p>Diğer şart ise sonuç bulunamazsa yani bulunan değişkenindeki değer 0’a eşitse no-result’ı aktif eder. Onun haricindeki durumlarda tablodaki tüm satırları sayar ki o da kaç satır varsa onu verir.</p>
+
+<h2 id="Çalışan-Örnek">Çalışan Örnek:</h2>
+
+<script async="" src="//jsfiddle.net/aligoren/od3d139L/embed/"></script>
+
+
+</div>
+<div class="comments">
+  <h3>Yorumlar</h3>
+  <div id="disqus_thread"></div>
+<script>
+
+/**
+*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+/*
+var disqus_config = function () {
+this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+*/
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+s.src = 'https://aligren.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                                
+</div>
+
+<!--<div class="related">
+  <h2>İlişkili Yazılar</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="/javascript-add-and-substract-days">
+            JavaScript Add and Substract Days
+            <small>02 Apr 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/javascript-currency-formatting">
+            JavaScript Currency Formatting
+            <small>17 Feb 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/ionic-get-view-name">
+            How to Get Current View Name in Ionic Framework
+            <small>29 Jan 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</div>
+-->
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if(!checkbox.checked ||
+             sidebar.contains(target) ||
+             (target === checkbox || target === toggle)) return;
+
+          checkbox.checked = false;
+        }, false);
+      })(document);
+    </script>
+  </body>
+</html>

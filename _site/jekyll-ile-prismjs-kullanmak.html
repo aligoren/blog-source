@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Jekyll ile PrismJS Kullanmak &middot; Ali GÖREN
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/lanyon.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+
+  <body>
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-item">
+    <p></p>
+    <img src="/images/ali.jpg" alt="my-photo">
+  </div>
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="/">Anasayfa</a>
+
+    
+
+    
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/about">About Me</a>
+        
+      
+    
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+  </nav>
+
+  <div class="sidebar-item">
+    <p>
+      &copy; 2017. Made with <span class="hearts">&hearts;</span> Jekyll
+    </p>
+  </div>
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Anasayfa">Ali GÖREN</a>
+            <small>Açık Kaynak, JavaScript, Python, .NET</small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post post-detail">
+  <h1 class="post-title">Jekyll ile PrismJS Kullanmak</h1>
+  <span class="post-date">15 Oct 2016</span>
+  
+    <div class="tag-container">
+        Etiketler:
+        
+          <span class="tags" alt="jekyll etiketine sahip yazılar" title="jekyll etiketine sahip yazılar">jekyll</span>
+        
+          <span class="tags" alt="javascript etiketine sahip yazılar" title="javascript etiketine sahip yazılar">javascript</span>
+        
+          <span class="tags" alt="prismjs etiketine sahip yazılar" title="prismjs etiketine sahip yazılar">prismjs</span>
+        
+          <span class="tags" alt="syntax etiketine sahip yazılar" title="syntax etiketine sahip yazılar">syntax</span>
+        
+    </div>
+  
+  <p>Blogu Jekyll’a taşıdıktan sonra uygun bir tema arayışına girmiştim. Bu uygun tema arayışında işimi en çok gören ise Pixyll teması oldu. Yapımcısı footer’da yer almakta. Neyse malumunuz kod içeren makaleler yazınca o makalelerdeki kodların da renklendirilmesi önemli.
+<!--more-->
+Kullandığımız temalara göre renklendirme özellikleri mevcut elbette. Ancak jekyll ile birlikte <a href="http://rouge.jneen.net/">Route</a> varsayılan olarak geldiği için pek de arayışa geçmeyiz. Fakat benim gibi görselliği de seviyorsanız mutlaka farklı alternatifleri de düşünürsünüz ki bunlardan birisi de <a href="http://pygments.org/">Pygments</a> oluyor. Tabi bunu da beğenmiyor olmanız pekala normal karşılanabilir.</p>
+
+<p>Ben özellikle son dönemde en popüler kod renklandiricilerden olan PrismJS kullanmayı uygun gördüm. Bu yazıda ve diğer yazılarda etkisini göreceksiniz. Çok uzatmadan nasıl kurulacağını anlatayım. Şimdi bu işlem 3 adımdan oluşmakta.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>İlk Adım: Rouge’un devre dışı bırakılması
+İkinci Adım PrismJS’in İndirilmesi
+Üçüncü Adım İlgili Kütüphanelerin head ve footer’a eklenmesi
+</code></pre>
+</div>
+
+<p>1-) Şimdi öncelikle bize lazım olan şey Rouge’un devre dışı kalması dedik. <code class="highlighter-rouge">_config.yml</code> dosyasına geçelim. Burada yapmamız gereken şey öncelikle <code class="highlighter-rouge">highlighter: none</code> demeliyiz.</p>
+
+<p>Daha sonra kramdown için alt seçeneklere bazı eklemeler gerçekleştirmeliyiz. Bu işleme göre syntax highlighter disable olmalı. Kısacası ilgili bölümler aşağıdaki gibi olmalı:</p>
+
+<div class="language-yaml highlighter-rouge"><pre class="highlight"><code><span class="s">highlighter</span><span class="pi">:</span> <span class="s">none</span>
+<span class="s">markdown</span><span class="pi">:</span> <span class="s">kramdown</span>
+<span class="s">kramdown</span><span class="pi">:</span>
+    <span class="s">syntax_highlighter_opts</span><span class="pi">:</span>
+        <span class="s">disable</span><span class="pi">:</span> <span class="s">true</span>
+</code></pre>
+</div>
+
+<p>2-) İlk adımı atlattık şimdi geldi ikinci adıma. İkinci adımda PrismJS’yi <a href="http://prismjs.com/">http://prismjs.com/</a> adresinden indirelim. Bu indirme ile birlikte iki dosya karşınıza gelecektir.Birisi JS bir diğeri de CSS dosyası.</p>
+
+<p>Ben PrismJS’i özelleştirerek indirmenizi öneriyorum. Syntax highlighter için default tema aslında gayet iyi ama siz dilerseniz farklı temaları da seçebilirsiniz. Blogunuzda hangi dillerde yayın yapıyorsanız (Programlama dilleri) o dilleri seçin öncelikle. Ben hepsini seçmedim ama bazı deneyip bir şeyler aktaracağım dillere dair seçimler gerçekleştirdim.</p>
+
+<p>Dil seçimi tamamlandı. Artık seçmemiz gereken bir diğer şey ise plugin yani eklentiler. Bunlar inanın PrismJS’i daha güzel bir şekilde kullanmanıza da imkan tanıyan eklentiler. Benim önerilerim şunlar:</p>
+
+<p><strong>Line Numbers:</strong> Satır numaralarını gösterir.</p>
+
+<p><strong>Autolinker:</strong> Kodlarda yer alan yorum satırlarında link varsa tıklanabilir hale getirir</p>
+
+<p><strong>Show Language:</strong> Eklenen kodun hangi dilde eklendiğini sağ üst köşede gösterir. Bu yazıdaki YAML örneğinde olduğu gibi</p>
+
+<p>3-) Son adıma geldik. Bu adımda indirilen dosyaları klasörlere atma zamanı. css zaten hazır olduğu için <code class="highlighter-rouge">prism.css</code> dosyasını o klasöre atın. Eğer js klasörü yoksa oluşturun ve <code class="highlighter-rouge">prism.js</code> dosyasını da o klasöre atın.</p>
+
+<p>Şimdi gelelim son adımlara. Öncelikle <mark>head.html</mark> dosyasını açalım. Ya da artık header görevini neresi görüyorsa orası. O kısma şu kodu yapıştıralım:</p>
+
+<div class="language-liquid highlighter-rouge"><pre class="highlight"><code>&lt;link rel="stylesheet" href="<span class="p">{{</span><span class="w"> </span><span class="s2">"/css/prism.css"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="nf">prepend</span><span class="p">:</span><span class="w"> </span>site.baseurl<span class="w"> </span><span class="p">}}</span>"&gt;
+</code></pre>
+</div>
+
+<p><em>Not: href içinde süslü parantezler vardır:</em></p>
+
+<div class="language-liquid highlighter-rouge"><pre class="highlight"><code><span class="p">{{</span><span class="w"> </span><span class="s2">"/css/prism.css"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="nf">prepend</span><span class="p">:</span><span class="w"> </span>site.baseurl<span class="w"> </span><span class="p">}}</span>
+</code></pre>
+</div>
+
+<p>Bu işlem bittikten sonra da artık son bir işimiz kalıyor. <mark>footer.html</mark> dosyasını açıp şu kodu yapıştıralım:</p>
+
+<div class="language-liquid highlighter-rouge"><pre class="highlight"><code>&lt;script src="<span class="p">{{</span><span class="w"> </span><span class="s2">"/js/prism.js"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="nf">prepend</span><span class="p">:</span><span class="w"> </span>site.baseurl<span class="w"> </span><span class="p">}}</span>"&gt;&lt;/script&gt;
+</code></pre>
+</div>
+
+<p>Yine yukarıdaki uyarı aynı bu kısımda da geçerlidir. Dikkate almanızı öneririm. Evet işlemler bu kadar :) Artık PrismJS hazır durumda.</p>
+
+</div>
+<div class="comments">
+  <h3>Yorumlar</h3>
+  <div id="disqus_thread"></div>
+<script>
+
+/**
+*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+/*
+var disqus_config = function () {
+this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+*/
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+s.src = 'https://aligren.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                                
+</div>
+
+<!--<div class="related">
+  <h2>İlişkili Yazılar</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="/javascript-add-and-substract-days">
+            JavaScript Add and Substract Days
+            <small>02 Apr 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/jquery-ile-tabloda-arama-yapmak">
+            jQuery ile Tabloda Arama Yapmak
+            <small>05 Mar 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/javascript-currency-formatting">
+            JavaScript Currency Formatting
+            <small>17 Feb 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</div>
+-->
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if(!checkbox.checked ||
+             sidebar.contains(target) ||
+             (target === checkbox || target === toggle)) return;
+
+          checkbox.checked = false;
+        }, false);
+      })(document);
+    </script>
+  </body>
+</html>

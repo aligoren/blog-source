@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      jQuery ile Dinamik İşlemler &middot; Ali GÖREN
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/lanyon.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+
+  <body>
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-item">
+    <p></p>
+    <img src="/images/ali.jpg" alt="my-photo">
+  </div>
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="/">Anasayfa</a>
+
+    
+
+    
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/about">About Me</a>
+        
+      
+    
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+  </nav>
+
+  <div class="sidebar-item">
+    <p>
+      &copy; 2017. Made with <span class="hearts">&hearts;</span> Jekyll
+    </p>
+  </div>
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Anasayfa">Ali GÖREN</a>
+            <small>Açık Kaynak, JavaScript, Python, .NET</small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post post-detail">
+  <h1 class="post-title">jQuery ile Dinamik İşlemler</h1>
+  <span class="post-date">31 Dec 2016</span>
+  
+    <div class="tag-container">
+        Etiketler:
+        
+          <span class="tags" alt="JavaScript etiketine sahip yazılar" title="JavaScript etiketine sahip yazılar">JavaScript</span>
+        
+          <span class="tags" alt="jQuery etiketine sahip yazılar" title="jQuery etiketine sahip yazılar">jQuery</span>
+        
+          <span class="tags" alt="Programming etiketine sahip yazılar" title="Programming etiketine sahip yazılar">Programming</span>
+        
+    </div>
+  
+  <p>Selam. Bu yazının içeriğini Tayfun Erbilen’in soru-cevap platformu olarak açtığı UzmanCevap üzerinde yer alan bir <a href="http://uzmancevap.org/soru/7644/jquery-kosulu-renklendirme">sorudan</a> çıkarıyorum.
+<!--more-->
+Sorun şu. Bir arkadaşımız HTML tablo oluşturmuş. Muhtemelen endüstriyel bir sistem var. Bu sistemde kapasitelerin ölçümünü yapıyor. Kapasitesi belli bir alanın üzerinde olana da renk vermek istiyor. Ama burada işlemin jQuery ile nasıl yapılacağı ile ilgileniyor. Normalde bunu back-end kısımda sorguyu çekerken de halledebileceğinizi söylemem gerekiyor.</p>
+
+<p>Sorunun özüne dönersek ilk satırda bir adet robot bulunmakta. Bu robota dair üç adet kapasite birimi bulunmakta. Arkadaşımız diyor ki kapasitesi 12’yi geçen hücrenin arkaplanı kırmızı renk olsun. Aslında kendisi zaten bir adet hücreyi yapmış. Fakat o tüm hücrelerin hesaplanmasını ve aslında tüm satırların da bu hesaba dahil olmasını istiyor.</p>
+
+<p>Öncelikle basit olarak tablomuzu şöyle size aktarayım kodları da yer alsın:</p>
+
+<div class="language-html highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;table&gt;</span>
+  <span class="nt">&lt;thead&gt;</span>
+    <span class="nt">&lt;th&gt;</span>Ad<span class="nt">&lt;/th&gt;</span>
+    <span class="nt">&lt;th&gt;</span>Kapasite<span class="nt">&lt;/th&gt;</span>
+    <span class="nt">&lt;th&gt;</span>Kapasite 2<span class="nt">&lt;/th&gt;</span>
+    <span class="nt">&lt;th&gt;</span>Kapasite 3<span class="nt">&lt;/th&gt;</span>
+  <span class="nt">&lt;/thead&gt;</span>
+  <span class="nt">&lt;tbody&gt;</span>
+    <span class="nt">&lt;tr&gt;</span>
+      <span class="nt">&lt;td&gt;</span>Robot1<span class="nt">&lt;/td&gt;</span>
+      <span class="nt">&lt;td</span> <span class="na">class=</span><span class="s">'kapasite'</span><span class="nt">&gt;</span>13<span class="nt">&lt;/td&gt;</span>
+      <span class="nt">&lt;td</span> <span class="na">class=</span><span class="s">'kapasite'</span><span class="nt">&gt;</span>12<span class="nt">&lt;/td&gt;</span>
+      <span class="nt">&lt;td</span> <span class="na">class=</span><span class="s">'kapasite'</span><span class="nt">&gt;</span>11<span class="nt">&lt;/td&gt;</span>
+    <span class="nt">&lt;/tr&gt;</span>
+    <span class="nt">&lt;tr&gt;</span>
+      <span class="nt">&lt;td&gt;</span>Robot2<span class="nt">&lt;/td&gt;</span>
+      <span class="nt">&lt;td</span> <span class="na">class=</span><span class="s">'kapasite'</span><span class="nt">&gt;</span>13<span class="nt">&lt;/td&gt;</span>
+      <span class="nt">&lt;td</span> <span class="na">class=</span><span class="s">'kapasite'</span><span class="nt">&gt;</span>13<span class="nt">&lt;/td&gt;</span>
+      <span class="nt">&lt;td</span> <span class="na">class=</span><span class="s">'kapasite'</span><span class="nt">&gt;</span>13<span class="nt">&lt;/td&gt;</span>
+    <span class="nt">&lt;/tr&gt;</span>
+    <span class="nt">&lt;tr&gt;</span>
+      <span class="nt">&lt;td&gt;</span>Robot3<span class="nt">&lt;/td&gt;</span>
+      <span class="nt">&lt;td</span> <span class="na">class=</span><span class="s">'kapasite'</span><span class="nt">&gt;</span>4<span class="nt">&lt;/td&gt;</span>
+      <span class="nt">&lt;td</span> <span class="na">class=</span><span class="s">'kapasite'</span><span class="nt">&gt;</span>18<span class="nt">&lt;/td&gt;</span>
+      <span class="nt">&lt;td</span> <span class="na">class=</span><span class="s">'kapasite'</span><span class="nt">&gt;</span>21<span class="nt">&lt;/td&gt;</span>
+    <span class="nt">&lt;/tr&gt;</span>
+    <span class="nt">&lt;tr&gt;</span>
+      <span class="nt">&lt;td&gt;</span>Robot4<span class="nt">&lt;/td&gt;</span>
+      <span class="nt">&lt;td</span> <span class="na">class=</span><span class="s">'kapasite'</span><span class="nt">&gt;</span>5<span class="nt">&lt;/td&gt;</span>
+      <span class="nt">&lt;td</span> <span class="na">class=</span><span class="s">'kapasite'</span><span class="nt">&gt;</span>21<span class="nt">&lt;/td&gt;</span>
+      <span class="nt">&lt;td</span> <span class="na">class=</span><span class="s">'kapasite'</span><span class="nt">&gt;</span>11<span class="nt">&lt;/td&gt;</span>
+    <span class="nt">&lt;/tr&gt;</span>
+  <span class="nt">&lt;/tbody&gt;</span>
+<span class="nt">&lt;/table&gt;</span>
+</code></pre>
+</div>
+
+<p><strong>Tablo Örnek</strong></p>
+
+<p><img src="/images/posts/robot_table.png" alt="/images/posts/robot_table.png" /></p>
+
+<p>Neyse bu tabloda belli başlı alanlar kurallı olarak renklendirilmeli. Arkadaşımızın kuralı 12’den büyük olanların arkaplanı kırmızı olsun şeklinde. Ben tüm hücrelere class vererek tek bir noktanın kontrolünün sağlanmasını istedim. Her bir satırda bulunan her bir hücrenin kontrolünü de sağlayarak bu işlemi tamamlayalım.</p>
+
+<p><strong>jQuery Kodu</strong></p>
+
+<div class="language-javascript highlighter-rouge"><pre class="highlight"><code><span class="nx">$</span><span class="p">(</span><span class="s2">"table"</span><span class="p">).</span><span class="nx">ready</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  	<span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">find</span><span class="p">(</span><span class="s2">"tr td.kapasite"</span><span class="p">).</span><span class="nx">each</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    	<span class="k">if</span><span class="p">(</span><span class="nb">parseInt</span><span class="p">(</span><span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">text</span><span class="p">())</span> <span class="o">&gt;</span> <span class="mi">12</span><span class="p">)</span> <span class="p">{</span>
+      	<span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">css</span><span class="p">(</span><span class="s2">"background-color"</span><span class="p">,</span> <span class="s2">"red"</span><span class="p">)</span>
+      <span class="p">}</span>
+    <span class="p">})</span>
+    
+  <span class="p">})</span>
+</code></pre>
+</div>
+
+<p>Yukarıdaki kodla tablo hazır olduğu anda hazır olan tabloda dolaşıyoruz. Öncelikle o tabloda tr yani satırı yakalıyoruz. Ardından o satırda yer alan hücreyi dolaşıyoruz tabi bunu yaparken ana şartıız ise class’ı kapasite olanı dolaşıyoruz. Tabloda 50 satır varsa 50 satırı ve hücrelerini dolaşacak kısacası. Bu işlemi <code class="highlighter-rouge">each()</code> fonksiyonu ile yapıyoruz.</p>
+
+<p>Daha sonra ilk dolaşılan satırdaki ilk hücrede yer alan değerin text’ini int türüne parse edip arkadaşımızın istediği koşuldan büyük mü kontrol ediyoruz. Zaten sonrası ise o hücreye yeni bir CSS atamak. Aynı işlemi buton için de yapabiliriz. Yani butona tıklayınca bu işlem gerçekleşmeli. Tabii bu işlemde bu sefer değer inputtan gelecek.</p>
+
+<div class="language-javascript highlighter-rouge"><pre class="highlight"><code><span class="nx">$</span><span class="p">(</span><span class="s2">"button"</span><span class="p">).</span><span class="nx">on</span><span class="p">(</span><span class="s2">"click"</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="nx">$</span><span class="p">(</span><span class="s2">"table"</span><span class="p">).</span><span class="nx">ready</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">kapasite</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">find</span><span class="p">(</span><span class="s2">"tr td.kapasite"</span><span class="p">).</span><span class="nx">each</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      	<span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">css</span><span class="p">(</span><span class="s2">"background-color"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span>
+        <span class="k">if</span><span class="p">(</span><span class="nb">parseInt</span><span class="p">(</span><span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">text</span><span class="p">())</span> <span class="o">&gt;</span> <span class="nb">parseInt</span><span class="p">(</span><span class="nx">$</span><span class="p">(</span><span class="s2">"[name='txtSayi']"</span><span class="p">).</span><span class="nx">val</span><span class="p">()))</span> <span class="p">{</span>
+          <span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">css</span><span class="p">(</span><span class="s2">"background-color"</span><span class="p">,</span> <span class="s2">"red"</span><span class="p">)</span>
+        <span class="p">}</span>
+      <span class="p">})</span>
+
+    <span class="p">})</span>
+  <span class="p">})</span>
+</code></pre>
+</div>
+
+<h2 id="jsfiddle-Üzerinde-Örnek">JSFiddle Üzerinde Örnek</h2>
+
+<script async="" src="//jsfiddle.net/cc6ded5w/1/embed/"></script>
+
+<p>Evet işlem bu kadar.</p>
+
+</div>
+<div class="comments">
+  <h3>Yorumlar</h3>
+  <div id="disqus_thread"></div>
+<script>
+
+/**
+*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+/*
+var disqus_config = function () {
+this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+*/
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+s.src = 'https://aligren.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                                
+</div>
+
+<!--<div class="related">
+  <h2>İlişkili Yazılar</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="/javascript-add-and-substract-days">
+            JavaScript Add and Substract Days
+            <small>02 Apr 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/jquery-ile-tabloda-arama-yapmak">
+            jQuery ile Tabloda Arama Yapmak
+            <small>05 Mar 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/javascript-currency-formatting">
+            JavaScript Currency Formatting
+            <small>17 Feb 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</div>
+-->
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if(!checkbox.checked ||
+             sidebar.contains(target) ||
+             (target === checkbox || target === toggle)) return;
+
+          checkbox.checked = false;
+        }, false);
+      })(document);
+    </script>
+  </body>
+</html>

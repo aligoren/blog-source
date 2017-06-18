@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      Python'da Zincirleme Metodlar &middot; Ali GÖREN
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/lanyon.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+
+  <body>
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-item">
+    <p></p>
+    <img src="/images/ali.jpg" alt="my-photo">
+  </div>
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="/">Anasayfa</a>
+
+    
+
+    
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/about">About Me</a>
+        
+      
+    
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+  </nav>
+
+  <div class="sidebar-item">
+    <p>
+      &copy; 2017. Made with <span class="hearts">&hearts;</span> Jekyll
+    </p>
+  </div>
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Anasayfa">Ali GÖREN</a>
+            <small>Açık Kaynak, JavaScript, Python, .NET</small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post post-detail">
+  <h1 class="post-title">Python'da Zincirleme Metodlar</h1>
+  <span class="post-date">31 Mar 2016</span>
+  
+    <div class="tag-container">
+        Etiketler:
+        
+          <span class="tags" alt="python etiketine sahip yazılar" title="python etiketine sahip yazılar">python</span>
+        
+          <span class="tags" alt="programming etiketine sahip yazılar" title="programming etiketine sahip yazılar">programming</span>
+        
+          <span class="tags" alt="chaining methods etiketine sahip yazılar" title="chaining methods etiketine sahip yazılar">chaining methods</span>
+        
+    </div>
+  
+  <p>Zincirleme metodlar, bir sınıfa ait metodları tek seferde çağırma şeklinde çalışırlar. Burada amaç kod okunabilirliğini artırmaktır. Çalışma mantığı olarak metod kendisini döndürür ve bu sayede peşine başka bir metod eklenebilir. Çalışma şeklinden dolayı bunlara zincirleme metod yani <code class="highlighter-rouge">Chaining Methods</code> deniliyor. Çalışma mantığını anladık ama biraz daha açıklamak gerekiyor. Örneğin bir <code class="highlighter-rouge">Cars</code> sınıfında o sınıfa ait belirli metodlar bulunmakta. Bu metodların şöyle olduğunu düşünelim sahtece:
+<!--more--></p>
+<pre><code class="language-pseudo">A Sınıfı =&gt;
+    A1_Metodu =&gt;
+        ... işlemler
+    A2_Metodu =&gt;
+        ... işlemler
+    A3_Metodu =&gt;
+        ... işlemler
+</code></pre>
+
+<p>Böyle bir yapıda sınıfımızı b değişkenine ilklediğimizi ve metodları çağırdığımızı düşünelim. O zaman durum şu olurdu</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">b</span> <span class="o">=</span> <span class="n">A</span> <span class="n">S</span><span class="err">ı</span><span class="n">n</span><span class="err">ı</span><span class="n">f</span><span class="err">ı</span>
+<span class="n">b</span><span class="o">.</span><span class="n">A1_Metodu</span>
+<span class="n">b</span><span class="o">.</span><span class="n">A2_Metodu</span>
+<span class="n">b</span><span class="o">.</span><span class="n">A3_Metodu</span>
+</code></pre>
+</div>
+
+<p>gibi tam da burada yardımcı olarak zincirleme metod deseni geliyor önümüze. Eğer bir chaining metod olsaydı yukarıdaki gibi alt alta bir tekrar yerine şöyle olacaktı:</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">b</span><span class="o">.</span><span class="n">A1_Metodu</span><span class="o">.</span><span class="n">A2_Metodu</span><span class="o">.</span><span class="n">A3_Metodu</span>
+</code></pre>
+</div>
+
+<p>Evet anlatmak istediğim tam da bu oluyor. Peki bu Python’da nasıl çalışıyor? Öncelikle kısaca Cars sınıfımızı oluşturalım. Bu sınıf ise <code class="highlighter-rouge">maker, model, year, price, miles, show_detail</code> metodlarına sahip olsun. Eldeki veriler üzerinden sınıfımızın iskeletini oluşturalım.</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Cars</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">maker</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mkr</span><span class="p">):</span>
+        <span class="c"># işlemler</span>
+
+    <span class="k">def</span> <span class="nf">model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mdl</span><span class="p">):</span>
+        <span class="c"># işlemler</span>
+
+    <span class="k">def</span> <span class="nf">year</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">yr</span><span class="p">):</span>
+        <span class="c"># işlemler</span>
+
+    <span class="k">def</span> <span class="nf">price</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prc</span><span class="p">):</span>
+        <span class="c"># işlemler</span>
+
+    <span class="k">def</span> <span class="nf">miles</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mile</span><span class="p">):</span>
+        <span class="c"># işlemler</span>
+
+    <span class="k">def</span> <span class="nf">show_detail</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c"># detay işlemleri</span>
+</code></pre>
+</div>
+
+<p>Evet iskeletimiz böyle. Şimdi maker yani üreticinin değer döndürmesini sağlamalıyız. Yukarıda metod kendisini döndürür ve bu sayede peşine başka bir metod eklenebilir demiştim. O zaman bu maker metodu son olarak kendisini döndürmeli. Ve yine kendisine değer almalı. Kendi değerini ise aldığı argümana eşitlemeliyiz. Bakalım hemen:</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="nf">maker</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mkr</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">maker</span> <span class="o">=</span> <span class="n">mkr</span>
+    <span class="k">return</span> <span class="bp">self</span>
+</code></pre>
+</div>
+
+<p><code class="highlighter-rouge">return self</code> ile metoda kendisini döndürme imkanı verdik. Bu işlemi <code class="highlighter-rouge">show_detail</code> hariç diğer metodlara da uygulayalım:</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Cars</span><span class="p">:</span>
+
+    <span class="k">def</span> <span class="nf">maker</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mkr</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">maker</span> <span class="o">=</span> <span class="n">mkr</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mdl</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">mdl</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">year</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">yr</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">year</span> <span class="o">=</span> <span class="n">yr</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">price</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prc</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">price</span> <span class="o">=</span> <span class="n">prc</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">miles</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mile</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">miles</span> <span class="o">=</span> <span class="n">mile</span>
+        <span class="k">return</span> <span class="bp">self</span>
+</code></pre>
+</div>
+
+<p>Son olarak da bu değerleri göstereceğimiz <strong>show_detail</strong> metodunu yazalım. O konu aslında basit olarak bildiğimiz bir konu zaten.</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="nf">show_detail</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"Maker:"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">maker</span><span class="p">,</span> <span class="s">"Model:"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="s">"Year:"</span><span class="p">,</span>
+          <span class="bp">self</span><span class="o">.</span><span class="n">year</span><span class="p">,</span> <span class="s">"Price:"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">price</span><span class="p">,</span> <span class="s">"Miles:"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">miles</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>Artık marka model ne var ne yok yazdıracağız hem de ekstra bir uğraş vermeden. Kullanımına bakarsak anlayacağız:</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">c</span> <span class="o">=</span> <span class="n">Cars</span><span class="p">()</span>
+
+<span class="n">c</span><span class="o">.</span><span class="n">maker</span><span class="p">(</span><span class="s">"Aston Martin"</span><span class="p">)</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="s">"DB9"</span><span class="p">)</span><span class="o">.</span><span class="n">year</span><span class="p">(</span><span class="mi">2004</span><span class="p">)</span><span class="o">.</span><span class="n">price</span><span class="p">(</span><span class="mf">149.000</span><span class="p">)</span><span class="o">.</span><span class="n">miles</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span><span class="o">.</span><span class="n">show_detail</span><span class="p">()</span>
+<span class="c"># Maker: Aston Martin Model: DB9 Year: 2004 Price: 149.0 Miles: 30</span>
+</code></pre>
+</div>
+
+<p>Üreticisi Aston Martin olan 2004 üretimli DB9 Model 30 Mildeki aracın fiyatının 149 bin euro olduğunu söylettik diyelim. Evet bu işlem bu kadar çıktıyı da yukarıda gördük. Kodların tamamı:</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Cars</span><span class="p">:</span>
+
+    <span class="k">def</span> <span class="nf">maker</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mkr</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">maker</span> <span class="o">=</span> <span class="n">mkr</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mdl</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">mdl</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">year</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">yr</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">year</span> <span class="o">=</span> <span class="n">yr</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">price</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prc</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">price</span> <span class="o">=</span> <span class="n">prc</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">miles</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mile</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">miles</span> <span class="o">=</span> <span class="n">mile</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">show_detail</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">"Maker:"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">maker</span><span class="p">,</span> <span class="s">"Model:"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="s">"Year:"</span><span class="p">,</span>
+              <span class="bp">self</span><span class="o">.</span><span class="n">year</span><span class="p">,</span> <span class="s">"Price:"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">price</span><span class="p">,</span> <span class="s">"Miles:"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">miles</span><span class="p">)</span>
+
+<span class="n">c</span> <span class="o">=</span> <span class="n">Cars</span><span class="p">()</span>
+
+<span class="n">c</span><span class="o">.</span><span class="n">maker</span><span class="p">(</span><span class="s">"Aston Martin"</span><span class="p">)</span><span class="o">.</span><span class="n">model</span><span class="p">(</span><span class="s">"DB9"</span><span class="p">)</span><span class="o">.</span><span class="n">year</span><span class="p">(</span>
+    <span class="mi">2004</span><span class="p">)</span><span class="o">.</span><span class="n">price</span><span class="p">(</span><span class="mf">149.000</span><span class="p">)</span><span class="o">.</span><span class="n">miles</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span><span class="o">.</span><span class="n">show_detail</span><span class="p">()</span>
+<span class="c"># Maker: Aston Martin Model: DB9 Year: 2004 Price: 149.0 Miles: 30</span>
+</code></pre>
+</div>
+
+<p>Kodları denediğim <a href="https://ideone.com/1blLKY">ideone</a>. Çalıştırılmış hali mevcut.</p>
+
+</div>
+<div class="comments">
+  <h3>Yorumlar</h3>
+  <div id="disqus_thread"></div>
+<script>
+
+/**
+*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+/*
+var disqus_config = function () {
+this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+*/
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+s.src = 'https://aligren.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                                
+</div>
+
+<!--<div class="related">
+  <h2>İlişkili Yazılar</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="/javascript-add-and-substract-days">
+            JavaScript Add and Substract Days
+            <small>02 Apr 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/jquery-ile-tabloda-arama-yapmak">
+            jQuery ile Tabloda Arama Yapmak
+            <small>05 Mar 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/javascript-currency-formatting">
+            JavaScript Currency Formatting
+            <small>17 Feb 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</div>
+-->
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if(!checkbox.checked ||
+             sidebar.contains(target) ||
+             (target === checkbox || target === toggle)) return;
+
+          checkbox.checked = false;
+        }, false);
+      })(document);
+    </script>
+  </body>
+</html>

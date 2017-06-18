@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      SQL'de Inner Join İşlemleri &middot; Ali GÖREN
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/lanyon.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+
+  <body>
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-item">
+    <p></p>
+    <img src="/images/ali.jpg" alt="my-photo">
+  </div>
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="/">Anasayfa</a>
+
+    
+
+    
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/about">About Me</a>
+        
+      
+    
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+  </nav>
+
+  <div class="sidebar-item">
+    <p>
+      &copy; 2017. Made with <span class="hearts">&hearts;</span> Jekyll
+    </p>
+  </div>
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Anasayfa">Ali GÖREN</a>
+            <small>Açık Kaynak, JavaScript, Python, .NET</small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post post-detail">
+  <h1 class="post-title">SQL'de Inner Join İşlemleri</h1>
+  <span class="post-date">07 Oct 2016</span>
+  
+    <div class="tag-container">
+        Etiketler:
+        
+          <span class="tags" alt="sql etiketine sahip yazılar" title="sql etiketine sahip yazılar">sql</span>
+        
+          <span class="tags" alt="mssql etiketine sahip yazılar" title="mssql etiketine sahip yazılar">mssql</span>
+        
+          <span class="tags" alt="sql server etiketine sahip yazılar" title="sql server etiketine sahip yazılar">sql server</span>
+        
+    </div>
+  
+  <p>SQL’de normalizasyon işlemlerini gerçekleştirdiğimiz zaman tabloları da bölme işlemini gerçekleştirmiş oluruz. Bu sayede hem normal formlarda bir database tasarımı gerçekleştirmiş oluruz hem de performans kazanabiliriz.
+<!--more-->
+Bu yazıda bölünmüş tabloların birleştirilmesinde faydalanabileceğimiz INNER JOIN kullanımına değineceğim. Yukarıda değinmiş olduğum performans konusu sadece yukarısı için geçerlidir. Her INNER JOIN performanslı olacak diye bir şey yoktur.</p>
+
+<p>İki tablo düşünelim. Bu tablolardan birisi kullanıcıların sadece adlarını tutuyor. Bir diğeri ise kullanıcıların sadece açıklamalarını tutuyor. Bu iki tablonun tek sorguda ortak sonuçlar üretmesi gerekiyor. Aslında sanal bir tablo oluştuğunu düşünün. Tıpkı string birleştirme işlemlerinde olduğu gibi. Hemen bunu tanımlayan iki tablo oluşturalım.</p>
+
+<div class="language-sql highlighter-rouge"><pre class="highlight"><code><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="p">[</span><span class="n">UserDetail</span><span class="p">]</span> <span class="p">(</span>
+	<span class="p">[</span><span class="n">ID</span><span class="p">]</span> <span class="n">int</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">IDENTITY</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="p">,</span>
+	<span class="p">[</span><span class="n">UserID</span><span class="p">]</span> <span class="n">int</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="p">,</span>
+	<span class="p">[</span><span class="n">UserDesc</span><span class="p">]</span> <span class="n">nvarchar</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span> <span class="k">NOT</span> <span class="k">NULL</span>
+<span class="p">);</span>
+
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="p">[</span><span class="n">Users</span><span class="p">]</span> <span class="p">(</span>
+	<span class="p">[</span><span class="n">ID</span><span class="p">]</span> <span class="n">int</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">IDENTITY</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="p">,</span>
+	<span class="p">[</span><span class="n">Name</span><span class="p">]</span> <span class="n">nvarchar</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span> <span class="k">NOT</span> <span class="k">NULL</span>
+<span class="p">);</span>
+</code></pre>
+</div>
+
+<p>Bu tabloları oluşturduktan sonra veri ekleme işlemlerini yapmalıyız. Bu işlemlerden ilkinde sadece kullanıcının adı yer alacakken, ikinci tabloda yani UserDetail tablosunda ise ilgili kullanıcının hem ID’si hem de açıklaması yer alacak. Eklemeleri ona göre gerçekleştirelim.</p>
+
+<div class="language-sql highlighter-rouge"><pre class="highlight"><code><span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">Users</span><span class="p">(</span><span class="n">Name</span><span class="p">)</span> <span class="k">VALUES</span><span class="p">(</span><span class="s1">'Ali'</span><span class="p">);</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">Users</span><span class="p">(</span><span class="n">Name</span><span class="p">)</span> <span class="k">VALUES</span><span class="p">(</span><span class="s1">'Ali2'</span><span class="p">);</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">Users</span><span class="p">(</span><span class="n">Name</span><span class="p">)</span> <span class="k">VALUES</span><span class="p">(</span><span class="s1">'Ali3'</span><span class="p">);</span>
+
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">UserDetail</span><span class="p">(</span><span class="n">UserID</span><span class="p">,</span> <span class="n">UserDesc</span><span class="p">)</span> <span class="k">VALUES</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s1">'Açıklama'</span><span class="p">);</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">UserDetail</span><span class="p">(</span><span class="n">UserID</span><span class="p">,</span> <span class="n">UserDesc</span><span class="p">)</span> <span class="k">VALUES</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s1">'2. Açıklama'</span><span class="p">);</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">UserDetail</span><span class="p">(</span><span class="n">UserID</span><span class="p">,</span> <span class="n">UserDesc</span><span class="p">)</span> <span class="k">VALUES</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="s1">'3. Açıklama'</span><span class="p">);</span>
+</code></pre>
+</div>
+
+<p>Şimdi normalde veri çekme işlemini yapıyor gibi SELECT sorgumuzu yazalım. Burada farklı olan şey ise veriyi seçeceğimiz asıl tablonun hemen yanına INNER JOIN yazmamız. JOIN işleminden sonra asıl tabloya bağlamak istediğimiz tabloyu belirtiyoruz. WHERE işleminin JOIN işlemlerinden sonra kullanıldığına da dikkat edin.</p>
+
+<div class="language-sql highlighter-rouge"><pre class="highlight"><code><span class="k">SELECT</span> <span class="n">u</span><span class="p">.</span><span class="n">Name</span><span class="p">,</span> <span class="n">ud</span><span class="p">.</span><span class="n">UserDesc</span> <span class="k">FROM</span> <span class="n">Users</span> <span class="n">u</span>
+<span class="k">INNER</span> <span class="k">JOIN</span> <span class="n">UserDetail</span> <span class="n">ud</span> <span class="k">ON</span>  <span class="n">u</span><span class="p">.</span><span class="n">ID</span><span class="o">=</span><span class="n">ud</span><span class="p">.</span><span class="n">UserID</span> <span class="k">WHERE</span> <span class="n">u</span><span class="p">.</span><span class="n">ID</span><span class="o">=</span><span class="mi">2</span><span class="p">;</span>
+</code></pre>
+</div>
+
+<p>Yukarıdaki kodda Users tablosunda bulunan Name kolonunu, UserDetail tablosunda bulunan UserDesc kolonunu, her iki tabloda da eşleşen kayda göre getir dedik.</p>
+
+<p>Buradan sahte bir kod yapısıyla şunu anlayabiliriz:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>if UsersTablosundakiUserID eşittir UserDetaildekiUserID ise
+	getir(UsersTablosundakiUserID)
+
+# Yani UserID2=UserDetailID2 ise WHERE ID=2 olanı getir
+</code></pre>
+</div>
+
+<p>İşlemin nasıl çalıştığını yukarıdaki kodla basitçe anlatmaya çalıştım. Anlayacağımız bir diğer şey ise görüyoruz ki sadece birbirine eşit olan kayıtları getiriyor. Burada bu işlemden sonra çıktının şöyle olduğunu görmekteyiz:</p>
+
+<table class="table table-hover">
+	<thead>
+		<tr>
+			<th>Name</th>
+			<th>UserDesc</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>Ali2</td>
+			<td>2. Açiklama</td>
+		</tr>
+	</tbody>
+</table>
+
+<p>Dilersek bir WHERE sorgusunu kullanmadan tablodaki eşleşen tüm kayıtları getirebiliriz. Bunun için UserDetail tablosunu düzenleyip UserID bölümünü NULLABLE olarak ayarlayalım ve bu tabloya bir veri eklemesi gerçekleştirelim.</p>
+
+<p>UserDetail tablosuna eklenen 4. verinin UserID kolonuna eklenecek değer NULL olarak gönderilsin.</p>
+
+<div class="language-sql highlighter-rouge"><pre class="highlight"><code><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="p">[</span><span class="n">UserDetail</span><span class="p">]</span> <span class="p">(</span>
+	<span class="p">[</span><span class="n">ID</span><span class="p">]</span> <span class="n">int</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">IDENTITY</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="p">,</span>
+	<span class="p">[</span><span class="n">UserID</span><span class="p">]</span> <span class="n">int</span><span class="p">,</span>
+	<span class="p">[</span><span class="n">UserDesc</span><span class="p">]</span> <span class="n">nvarchar</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span> <span class="k">NOT</span> <span class="k">NULL</span>
+<span class="p">);</span>
+
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="p">[</span><span class="n">Users</span><span class="p">]</span> <span class="p">(</span>
+	<span class="p">[</span><span class="n">ID</span><span class="p">]</span> <span class="n">int</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">IDENTITY</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="p">,</span>
+	<span class="p">[</span><span class="n">Name</span><span class="p">]</span> <span class="n">nvarchar</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span> <span class="k">NOT</span> <span class="k">NULL</span>
+<span class="p">);</span>
+
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">Users</span><span class="p">(</span><span class="n">Name</span><span class="p">)</span> <span class="k">VALUES</span><span class="p">(</span><span class="s1">'Ali'</span><span class="p">);</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">Users</span><span class="p">(</span><span class="n">Name</span><span class="p">)</span> <span class="k">VALUES</span><span class="p">(</span><span class="s1">'Ali2'</span><span class="p">);</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">Users</span><span class="p">(</span><span class="n">Name</span><span class="p">)</span> <span class="k">VALUES</span><span class="p">(</span><span class="s1">'Ali3'</span><span class="p">);</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">Users</span><span class="p">(</span><span class="n">Name</span><span class="p">)</span> <span class="k">VALUES</span><span class="p">(</span><span class="s1">'Ali4'</span><span class="p">);</span>
+
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">UserDetail</span><span class="p">(</span><span class="n">UserID</span><span class="p">,</span> <span class="n">UserDesc</span><span class="p">)</span> <span class="k">VALUES</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s1">'Açıklama'</span><span class="p">);</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">UserDetail</span><span class="p">(</span><span class="n">UserID</span><span class="p">,</span> <span class="n">UserDesc</span><span class="p">)</span> <span class="k">VALUES</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s1">'2. Açıklama'</span><span class="p">);</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">UserDetail</span><span class="p">(</span><span class="n">UserID</span><span class="p">,</span> <span class="n">UserDesc</span><span class="p">)</span> <span class="k">VALUES</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="s1">'3. Açıklama'</span><span class="p">);</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">UserDetail</span><span class="p">(</span><span class="n">UserID</span><span class="p">,</span> <span class="n">UserDesc</span><span class="p">)</span> <span class="k">VALUES</span><span class="p">(</span><span class="k">NULL</span><span class="p">,</span> <span class="s1">'4. Açıklama'</span><span class="p">);</span>
+</code></pre>
+</div>
+
+<p>Daha sonra JOIN işlemini WHERE kullanmadan çalıştıralım:</p>
+
+<div class="language-sql highlighter-rouge"><pre class="highlight"><code><span class="k">SELECT</span> <span class="n">u</span><span class="p">.</span><span class="n">Name</span><span class="p">,</span> <span class="n">ud</span><span class="p">.</span><span class="n">UserDesc</span> <span class="k">FROM</span> <span class="n">Users</span> <span class="n">u</span>
+<span class="k">INNER</span> <span class="k">JOIN</span> <span class="n">UserDetail</span> <span class="n">ud</span> <span class="k">ON</span>  <span class="n">u</span><span class="p">.</span><span class="n">ID</span><span class="o">=</span><span class="n">ud</span><span class="p">.</span><span class="n">UserID</span><span class="p">;</span>
+</code></pre>
+</div>
+
+<table class="table table-hover">
+	<thead>
+		<tr>
+			<th>Name</th>
+			<th>UserDesc</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>Ali</td>
+			<td>Açiklama</td>
+		</tr>
+		<tr>
+			<td>Ali2</td>
+			<td>2. Açiklama</td>
+		</tr>
+		<tr>
+			<td>Ali3</td>
+			<td>3. Açiklama</td>
+		</tr>
+	</tbody>
+</table>
+
+<p>Fark ettiyseniz çıktıda eklediğimiz 4. veri yok. Çünkü iki tablodaki ortak kabul edilen alanlardan birisi diğerinden farklı. Eşleşme sağlanamıyor. Buradan INNER JOIN için NULL olmayan, eşleşen kayıtları getiren SQL ifadeleridir çıkarımını da gerçekleştirebiliriz.</p>
+
+<p>1- Yöntem Olarak WHERE Sorgusu Kullanmak</p>
+
+<p>Evet eğer aklınızda WHERE sorgusu belirmiş olabilir. İkinci yöntem olarak WHERE sorgusu da kullanabilirsiniz</p>
+
+<div class="language-sql highlighter-rouge"><pre class="highlight"><code><span class="k">SELECT</span> <span class="n">u</span><span class="p">.</span><span class="n">Name</span><span class="p">,</span> <span class="n">ud</span><span class="p">.</span><span class="n">UserDesc</span>
+<span class="k">FROM</span> <span class="n">Users</span> <span class="n">u</span><span class="p">,</span> <span class="n">UserDetail</span> <span class="n">ud</span>
+<span class="k">WHERE</span> <span class="n">u</span><span class="p">.</span><span class="n">ID</span><span class="o">=</span><span class="n">ud</span><span class="p">.</span><span class="n">UserID</span>
+
+<span class="c1">-- ya da</span>
+
+<span class="k">SELECT</span> <span class="n">u</span><span class="p">.</span><span class="n">Name</span><span class="p">,</span> <span class="n">ud</span><span class="p">.</span><span class="n">UserDesc</span>
+<span class="k">FROM</span> <span class="n">Users</span> <span class="n">u</span><span class="p">,</span> <span class="n">UserDetail</span> <span class="n">ud</span>
+<span class="k">WHERE</span> <span class="n">u</span><span class="p">.</span><span class="n">ID</span><span class="o">=</span><span class="n">ud</span><span class="p">.</span><span class="n">UserID</span> <span class="k">and</span> <span class="n">u</span><span class="p">.</span><span class="n">ID</span><span class="o">=</span><span class="mi">2</span>
+</code></pre>
+</div>
+
+<p>Yine aynı çıktıyı verecektir. İkisi arasındaki farkları araştırmanız, neyin nerede kullanılacağını bilmeniz sizin için iyi olur.</p>
+
+<p>Örnek SQL Fiddle <a href="http://sqlfiddle.com/#!6/1e87c/2">Linki</a></p>
+
+</div>
+<div class="comments">
+  <h3>Yorumlar</h3>
+  <div id="disqus_thread"></div>
+<script>
+
+/**
+*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+/*
+var disqus_config = function () {
+this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+*/
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+s.src = 'https://aligren.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                                
+</div>
+
+<!--<div class="related">
+  <h2>İlişkili Yazılar</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="/javascript-add-and-substract-days">
+            JavaScript Add and Substract Days
+            <small>02 Apr 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/jquery-ile-tabloda-arama-yapmak">
+            jQuery ile Tabloda Arama Yapmak
+            <small>05 Mar 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/javascript-currency-formatting">
+            JavaScript Currency Formatting
+            <small>17 Feb 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</div>
+-->
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if(!checkbox.checked ||
+             sidebar.contains(target) ||
+             (target === checkbox || target === toggle)) return;
+
+          checkbox.checked = false;
+        }, false);
+      })(document);
+    </script>
+  </body>
+</html>

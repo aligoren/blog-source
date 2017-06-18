@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+  <head>
+  <link href="http://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+  <!-- Enable responsiveness on mobile devices-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  <title>
+    
+      SQL Server'da Filtreli Arama Gerceklestirme &middot; Ali GÖREN
+    
+  </title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/public/css/poole.css">
+  <link rel="stylesheet" href="/public/css/syntax.css">
+  <link rel="stylesheet" href="/public/css/lanyon.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Serif:400,400italic,700%7CPT+Sans:400">
+
+  <!-- Icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/public/apple-touch-icon-precomposed.png">
+  <link rel="shortcut icon" href="/public/favicon.ico">
+
+  <!-- RSS -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/atom.xml">
+</head>
+
+
+  <body>
+
+    <!-- Target for toggling the sidebar `.sidebar-checkbox` is for regular
+     styles, `#sidebar-checkbox` for behavior. -->
+<input type="checkbox" class="sidebar-checkbox" id="sidebar-checkbox">
+
+<!-- Toggleable sidebar -->
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-item">
+    <p></p>
+    <img src="/images/ali.jpg" alt="my-photo">
+  </div>
+
+  <nav class="sidebar-nav">
+    <a class="sidebar-nav-item" href="/">Anasayfa</a>
+
+    
+
+    
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+          <a class="sidebar-nav-item" href="/about">About Me</a>
+        
+      
+    
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+  </nav>
+
+  <div class="sidebar-item">
+    <p>
+      &copy; 2017. Made with <span class="hearts">&hearts;</span> Jekyll
+    </p>
+  </div>
+</div>
+
+
+    <!-- Wrap is the content to shift when toggling the sidebar. We wrap the
+         content to avoid any CSS collisions with our real content. -->
+    <div class="wrap">
+      <div class="masthead">
+        <div class="container">
+          <h3 class="masthead-title">
+            <a href="/" title="Anasayfa">Ali GÖREN</a>
+            <small>Açık Kaynak, JavaScript, Python, .NET</small>
+          </h3>
+        </div>
+      </div>
+
+      <div class="container content">
+        <div class="post post-detail">
+  <h1 class="post-title">SQL Server'da Filtreli Arama Gerceklestirme</h1>
+  <span class="post-date">03 Aug 2016</span>
+  
+    <div class="tag-container">
+        Etiketler:
+        
+          <span class="tags" alt="sql etiketine sahip yazılar" title="sql etiketine sahip yazılar">sql</span>
+        
+          <span class="tags" alt="mssql etiketine sahip yazılar" title="mssql etiketine sahip yazılar">mssql</span>
+        
+          <span class="tags" alt="sql server etiketine sahip yazılar" title="sql server etiketine sahip yazılar">sql server</span>
+        
+    </div>
+  
+  <p>Merhaba. Karmaşık bir arama işleminiz olabilir. Örneğin basit bir uygulama ile olaya bakalım:</p>
+
+<p>Varsayalım ki InsanKaynaklari adında bir tablonuz bulunmakta. Bu tablo üzerinde bazı aramalar gerçekleştirmek istiyorsunuz. Örneğin bu aramalar
+<!--more-->
+Doğum Tarihi, Doğum Yeri, Cinsiyet, Medeni Durum, Maaş, Eğitim Düzeyi, Mesleki Belge ya da Meslek şeklinde olabilir. Normalde bir aramada tek şekilde şöyle bakabilirdik</p>
+
+<div class="language-sql highlighter-rouge"><pre class="highlight"><code><span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">InsanKaynaklari</span> <span class="k">as</span> <span class="n">Ik</span>
+<span class="k">WHERE</span> <span class="n">Ik</span><span class="p">.</span><span class="n">MedeniDurum</span><span class="o">=</span><span class="s1">'Bekar'</span> <span class="k">AND</span> <span class="n">Ik</span><span class="p">.</span><span class="n">Cinsiyet</span><span class="o">=</span><span class="s1">'Erkek'</span>
+</code></pre>
+</div>
+
+<p>Bu sorgu ilk başlangıç olarak işimizi görüyor olabilir. Ancak bazı durumlarda sorgularımız sadece iki tane ile sınırlı kalmayabilir ve işin ilginç noktası bu sorguları örneğin C# tarafında gerçekleştiriyor olabiliriz. 6-7 adet textBox içinden sadece 3 tanesinin dolu olduğunu, diğerlerinin NULL gönderildiğini düşünün.</p>
+
+<p>Bu gibi durumlar için bir Stored Procedure oluşturabiliriz. Bir Stored Procedure oluşturma aşamasını bildiğimizi varsayarak basit olarak bir SP oluşturalım. Örneğin:</p>
+
+<div class="language-sql highlighter-rouge"><pre class="highlight"><code><span class="k">CREATE</span> <span class="k">PROCEDURE</span> <span class="n">PersonelAra</span>
+	<span class="o">@</span><span class="n">dtarih</span> <span class="n">date</span><span class="p">,</span>
+	<span class="o">@</span><span class="n">dyeri</span> <span class="n">nvarchar</span><span class="p">(</span><span class="mi">50</span><span class="p">),</span>
+	<span class="o">@</span><span class="n">cinsiyet</span> <span class="n">nvarchar</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span>
+	<span class="o">@</span><span class="n">mdurum</span> <span class="n">nvarchar</span><span class="p">(</span><span class="mi">15</span><span class="p">),</span>
+	<span class="o">@</span><span class="n">maas</span> <span class="n">nvarchar</span><span class="p">(</span><span class="mi">50</span><span class="p">),</span> <span class="c1">-- bilinçli money yapmadım</span>
+	<span class="o">@</span><span class="n">eduzey</span> <span class="n">nvarchar</span><span class="p">(</span><span class="mi">50</span><span class="p">),</span>
+	<span class="o">@</span><span class="n">mbelge</span> <span class="n">nvarchar</span><span class="p">(</span><span class="mi">50</span><span class="p">),</span>
+	<span class="o">@</span><span class="n">meslek</span> <span class="n">nvarchar</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span>
+<span class="k">AS</span>
+<span class="k">BEGIN</span>
+
+<span class="k">END</span>
+</code></pre>
+</div>
+
+<p>şeklinde bir hayali SP oluşturdum. Bu işlemde WHERE harici belki bize yabancı gelen bir method göreceğiz. COALESCE methodu. Bu metoda bakarsak eğer sınırsız sayıda parametre alabiliyor. Yaptığı işlemse ilk olarak NULL olmayan değeri geri döndürmektir. Eğer değer NULL ise zaten bu değeri geri döndürecektir.</p>
+
+<p>Çalışma mantığına bakacak olursak öyle işlemektedir. Varsayalım ki WHERE kontrolü gerçekleştiriyoruz:</p>
+
+<div class="language-sql highlighter-rouge"><pre class="highlight"><code><span class="k">WHERE</span> <span class="n">kolonAdi</span><span class="o">=</span><span class="n">COALESCE</span><span class="p">(</span><span class="o">@</span><span class="n">spDegiskeni</span><span class="p">,</span> <span class="n">kolonAdi</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>şeklinde bir kontrol ile null ya da null olmayan tüm değerleri listeletebiliriz. Bu bilgilere bakarak o zaman ben diyebilirim ki gelen her değişkeni COALESCE ile işletip null olmayan bir değer döndürebilirim. Eğer NULL ise yine gelecek diyebilirim.</p>
+
+<p>Örneğin yukarıda oluşturduğumuz SP içinden devam edelim:</p>
+
+<div class="language-sql highlighter-rouge"><pre class="highlight"><code><span class="k">SELECT</span> <span class="n">isim</span><span class="p">,</span> <span class="n">soyisim</span><span class="p">,</span> <span class="k">FROM</span> <span class="n">InsanKanaklari</span> <span class="k">as</span> <span class="n">Ik</span>
+    <span class="k">WHERE</span> <span class="p">(</span>
+        <span class="n">ik</span><span class="p">.</span><span class="n">dogumtarihi</span><span class="o">=</span><span class="n">COALESCE</span><span class="p">(</span><span class="o">@</span><span class="n">dtarih</span><span class="p">,</span> <span class="n">ik</span><span class="p">.</span><span class="n">dogumtarihi</span><span class="p">)</span>
+        <span class="k">AND</span> <span class="n">ik</span><span class="p">.</span><span class="n">dogumyeri</span><span class="o">=</span><span class="n">COALESCE</span><span class="p">(</span><span class="o">@</span><span class="n">dyeri</span><span class="p">,</span> <span class="n">ik</span><span class="p">.</span><span class="n">dogumyeri</span><span class="p">)</span>
+        <span class="k">AND</span> <span class="n">ik</span><span class="p">.</span><span class="n">cinsiyet</span><span class="o">=</span><span class="n">COALESCE</span><span class="p">(</span><span class="o">@</span><span class="n">cinsiyet</span><span class="p">,</span> <span class="n">ik</span><span class="p">.</span><span class="n">cinsiyet</span><span class="p">)</span>
+        <span class="k">AND</span> <span class="n">ik</span><span class="p">.</span><span class="n">medenidurum</span><span class="o">=</span><span class="n">COALESCE</span><span class="p">(</span><span class="o">@</span><span class="n">mdurum</span><span class="p">,</span> <span class="n">ik</span><span class="p">.</span><span class="n">medenidurum</span><span class="p">)</span>
+        <span class="k">AND</span> <span class="n">ik</span><span class="p">.</span><span class="n">maas</span><span class="o">=</span><span class="n">COALESCE</span><span class="p">(</span><span class="o">@</span><span class="n">maas</span><span class="p">,</span> <span class="n">ik</span><span class="p">.</span><span class="n">maas</span><span class="p">)</span>
+        <span class="k">AND</span> <span class="n">ik</span><span class="p">.</span><span class="n">egitimduzeyi</span><span class="o">=</span><span class="n">COALESCE</span><span class="p">(</span><span class="o">@</span><span class="n">eduzey</span><span class="p">,</span> <span class="n">ik</span><span class="p">.</span><span class="n">egitimduzeyi</span><span class="p">)</span>
+        <span class="k">AND</span> <span class="n">ik</span><span class="p">.</span><span class="n">meslekibelge</span><span class="o">=</span><span class="n">COALESCE</span><span class="p">(</span><span class="o">@</span><span class="n">mbelge</span><span class="p">,</span> <span class="n">ik</span><span class="p">.</span><span class="n">meslekibelge</span><span class="p">)</span>
+        <span class="k">AND</span> <span class="n">ik</span><span class="p">.</span><span class="n">meslek</span><span class="o">=</span><span class="n">COALESCE</span><span class="p">(</span><span class="o">@</span><span class="n">meslek</span><span class="p">,</span> <span class="n">ik</span><span class="p">.</span><span class="n">meslek</span><span class="p">)</span>
+<span class="p">)</span>
+</code></pre>
+</div>
+
+<p>Burada öncelikle WHERE şartını gerçekleştirdik. Daha sonra ise WHERE şartında kolonun değerini, COALESCE işlemi ile karşılaştırıp değerleri getirebiliyoruz. COALESCE metodu ilk parametresinde sorgulanacak değeri, ikinci parametresinde de tablo kolonunu aldı. Bunu görerek filtreli sorgulama gerçekleştirebiliriz.</p>
+
+<p>Son adımda SP şöyle oluyor:</p>
+
+<div class="language-sql highlighter-rouge"><pre class="highlight"><code><span class="k">CREATE</span> <span class="k">PROCEDURE</span> <span class="n">PersonelAra</span>
+	<span class="o">@</span><span class="n">dtarih</span> <span class="n">date</span><span class="p">,</span>
+	<span class="o">@</span><span class="n">dyeri</span> <span class="n">nvarchar</span><span class="p">(</span><span class="mi">50</span><span class="p">),</span>
+	<span class="o">@</span><span class="n">cinsiyet</span> <span class="n">nvarchar</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span>
+	<span class="o">@</span><span class="n">mdurum</span> <span class="n">nvarchar</span><span class="p">(</span><span class="mi">15</span><span class="p">),</span>
+	<span class="o">@</span><span class="n">maas</span> <span class="n">nvarchar</span><span class="p">(</span><span class="mi">50</span><span class="p">),</span> <span class="c1">-- bilinçli money yapmadım</span>
+	<span class="o">@</span><span class="n">eduzey</span> <span class="n">nvarchar</span><span class="p">(</span><span class="mi">50</span><span class="p">),</span>
+	<span class="o">@</span><span class="n">mbelge</span> <span class="n">nvarchar</span><span class="p">(</span><span class="mi">50</span><span class="p">),</span>
+	<span class="o">@</span><span class="n">meslek</span> <span class="n">nvarchar</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span>
+<span class="k">AS</span>
+<span class="k">BEGIN</span>
+    <span class="k">SELECT</span> <span class="n">isim</span><span class="p">,</span> <span class="n">soyisim</span><span class="p">,</span> <span class="k">FROM</span> <span class="n">InsanKanaklari</span> <span class="k">as</span> <span class="n">Ik</span>
+        <span class="k">WHERE</span> <span class="p">(</span>
+            <span class="n">ik</span><span class="p">.</span><span class="n">dogumtarihi</span><span class="o">=</span><span class="n">COALESCE</span><span class="p">(</span><span class="o">@</span><span class="n">dtarih</span><span class="p">,</span> <span class="n">ik</span><span class="p">.</span><span class="n">dogumtarihi</span><span class="p">)</span>
+            <span class="k">AND</span> <span class="n">ik</span><span class="p">.</span><span class="n">dogumyeri</span><span class="o">=</span><span class="n">COALESCE</span><span class="p">(</span><span class="o">@</span><span class="n">dyeri</span><span class="p">,</span> <span class="n">ik</span><span class="p">.</span><span class="n">dogumyeri</span><span class="p">)</span>
+            <span class="k">AND</span> <span class="n">ik</span><span class="p">.</span><span class="n">cinsiyet</span><span class="o">=</span><span class="n">COALESCE</span><span class="p">(</span><span class="o">@</span><span class="n">cinsiyet</span><span class="p">,</span> <span class="n">ik</span><span class="p">.</span><span class="n">cinsiyet</span><span class="p">)</span>
+            <span class="k">AND</span> <span class="n">ik</span><span class="p">.</span><span class="n">medenidurum</span><span class="o">=</span><span class="n">COALESCE</span><span class="p">(</span><span class="o">@</span><span class="n">mdurum</span><span class="p">,</span> <span class="n">ik</span><span class="p">.</span><span class="n">medenidurum</span><span class="p">)</span>
+            <span class="k">AND</span> <span class="n">ik</span><span class="p">.</span><span class="n">maas</span><span class="o">=</span><span class="n">COALESCE</span><span class="p">(</span><span class="o">@</span><span class="n">maas</span><span class="p">,</span> <span class="n">ik</span><span class="p">.</span><span class="n">maas</span><span class="p">)</span>
+            <span class="k">AND</span> <span class="n">ik</span><span class="p">.</span><span class="n">egitimduzeyi</span><span class="o">=</span><span class="n">COALESCE</span><span class="p">(</span><span class="o">@</span><span class="n">eduzey</span><span class="p">,</span> <span class="n">ik</span><span class="p">.</span><span class="n">egitimduzeyi</span><span class="p">)</span>
+            <span class="k">AND</span> <span class="n">ik</span><span class="p">.</span><span class="n">meslekibelge</span><span class="o">=</span><span class="n">COALESCE</span><span class="p">(</span><span class="o">@</span><span class="n">mbelge</span><span class="p">,</span> <span class="n">ik</span><span class="p">.</span><span class="n">meslekibelge</span><span class="p">)</span>
+            <span class="k">AND</span> <span class="n">ik</span><span class="p">.</span><span class="n">meslek</span><span class="o">=</span><span class="n">COALESCE</span><span class="p">(</span><span class="o">@</span><span class="n">meslek</span><span class="p">,</span> <span class="n">ik</span><span class="p">.</span><span class="n">meslek</span><span class="p">)</span>
+    <span class="p">)</span>
+<span class="k">END</span>
+</code></pre>
+</div>
+
+</div>
+<div class="comments">
+  <h3>Yorumlar</h3>
+  <div id="disqus_thread"></div>
+<script>
+
+/**
+*  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+*  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+/*
+var disqus_config = function () {
+this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+*/
+(function() { // DON'T EDIT BELOW THIS LINE
+var d = document, s = d.createElement('script');
+s.src = 'https://aligren.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                                
+</div>
+
+<!--<div class="related">
+  <h2>İlişkili Yazılar</h2>
+  <ul class="related-posts">
+    
+      <li>
+        <h3>
+          <a href="/javascript-add-and-substract-days">
+            JavaScript Add and Substract Days
+            <small>02 Apr 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/jquery-ile-tabloda-arama-yapmak">
+            jQuery ile Tabloda Arama Yapmak
+            <small>05 Mar 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+      <li>
+        <h3>
+          <a href="/javascript-currency-formatting">
+            JavaScript Currency Formatting
+            <small>17 Feb 2017</small>
+          </a>
+        </h3>
+      </li>
+    
+  </ul>
+</div>
+-->
+      </div>
+    </div>
+
+    <label for="sidebar-checkbox" class="sidebar-toggle"></label>
+
+    <script>
+      (function(document) {
+        var toggle = document.querySelector('.sidebar-toggle');
+        var sidebar = document.querySelector('#sidebar');
+        var checkbox = document.querySelector('#sidebar-checkbox');
+
+        document.addEventListener('click', function(e) {
+          var target = e.target;
+
+          if(!checkbox.checked ||
+             sidebar.contains(target) ||
+             (target === checkbox || target === toggle)) return;
+
+          checkbox.checked = false;
+        }, false);
+      })(document);
+    </script>
+  </body>
+</html>
