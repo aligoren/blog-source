@@ -34,7 +34,7 @@ I have some skills about web developing especially JavaScript. I can write Vanil
 
 ## Hobbies
 
-I like classical music. I like physics, even if I don't understand. As you can see, My English isn't very good. I'm trying to improve My English.
+I like classical music. I like physics, even if I don't understand. As you can see, My English isn't very good. I'm trying to improve it.
 
 ### Social
 
